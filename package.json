@@ -30,7 +30,7 @@
   "scripts": {
     "predev": "npm install",
     "start": "react-scripts start",
-    "dev": "PORT=5999 react-scripts start & cd backend && npm run dev",
+    "dev": "PORT=5999 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
