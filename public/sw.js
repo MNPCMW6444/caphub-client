@@ -8,8 +8,8 @@ self.addEventListener("install", (event) => {
         "/static/js/vendors~main.chunk.js",
         "/static/js/main.chunk.js",
         "/manifest.json",
-        "/caphubLogo.png",
-        "/caphubLogo144.png",
+        "/CapHubLogo.png",
+        "/CapHubLogo144.png",
       ]);
     })
   );

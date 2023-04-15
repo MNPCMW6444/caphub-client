@@ -2,6 +2,7 @@ import { founders } from "../content/surveys";
 import CapHubSurvey from "./components/CapHubSurvey";
 import CapHubThemeProvider from "./providers/style/CapHubThemeProvider";
 import ProvideMainServer from "./providers/servers/ProvideMainServer";
+import CapHubAuth from "./components/auth/CapHubAuth";
 // import { LinkedIn } from "react-linkedin-login-oauth2";
 /* 
 const handleLinkedInSuccess = async ( response: any ) => {
@@ -34,6 +35,7 @@ const App = () => {
   return (
     <CapHubThemeProvider>
       <ProvideMainServer>
+        <CapHubAuth />
         <CapHubSurvey surveyJson={founders} type="founder" />
         <div>
           <h1>Login</h1>
