@@ -5,7 +5,7 @@ import { Model } from "survey-core";
 import axios from "axios";
 import UserContext from "../context/UserContext";
 import ProgressBarWithText from "./ProgressBarWithText";
-import domain from "../util/domain";
+import domain from "../util/config/domain";
 
 export default function PPSurvey({ surveyJson, type }: any) {
   const { user } = useContext(UserContext);

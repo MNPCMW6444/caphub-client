@@ -1,18 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import { UserContextProvider } from "./context/UserContext";
-import App from "./App";
+import App from "./app/App";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <UserContextProvider>
-      <App />
-    </UserContextProvider>
+    <App />
   </React.StrictMode>
 );
 
