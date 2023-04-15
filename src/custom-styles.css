@@ -1,0 +1,66 @@
+/* custom-styles.css */
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  color: #444;
+  background-color: #ffffff;
+}
+
+.app-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.subheader {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  color: #2c3e50;
+}
+
+.button-primary {
+  background-color: #1abc9c;
+  color: #ffffff;
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  text-transform: none;
+  border-radius: 25px;
+  padding: 12px 25px;
+}
+
+.button-primary:hover {
+  background-color: #16a085;
+}
+
+.section {
+  padding: 3rem 0;
+}
+
+.section-title {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  color: #2c3e50;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.step-card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.step-number {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  color: #1abc9c;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
