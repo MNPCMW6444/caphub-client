@@ -65,7 +65,7 @@ const randomSentence = (sentences: any) => {
   return randomSentenceTrial;
 };
 
-const ProgressBarWithText = ({ founder }: any) => {
+const ProggressWheel = ({ founder }: any) => {
   const [progress, setProgress] = useState(0);
 
   const sentences = useMemo(
@@ -116,4 +116,4 @@ const ProgressBarWithText = ({ founder }: any) => {
   );
 };
 
-export default ProgressBarWithText;
+export default ProggressWheel;

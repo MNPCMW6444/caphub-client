@@ -4,9 +4,15 @@ import domain from "../../util/config/domain";
 
 interface ProvideMainServerProps {
   children: ReactNode;
+  tryInterval?: number;
 }
 
-const ProvideMainServer: React.FC<ProvideMainServerProps> = ({ children }) => {
+const DEFAULT_TRY_INTERVAL = 500;
+
+const ProvideMainServer = ({
+  children,
+  tryInterval,
+}: ProvideMainServerProps) => {
   const [status, setStatus] = useState<string>(
     "Checking server availability..."
   );
@@ -26,7 +32,10 @@ const ProvideMainServer: React.FC<ProvideMainServerProps> = ({ children }) => {
       setStatus(await checkIfServerIsThere());
     setStatusAsyncly();
     status !== "good" &&
-      setTimeout(() => status !== "good" && setStatusAsyncly(), 5000);
+      setTimeout(
+        () => status !== "good" && setStatusAsyncly(),
+        tryInterval || DEFAULT_TRY_INTERVAL
+      );
   }, [status]);
 
   if (status === "good") {
