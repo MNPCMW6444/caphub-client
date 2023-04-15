@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material/styles";
 
-export const caphubThemee: ThemeOptions = {
+export const caphubTheme: ThemeOptions = {
   palette: {
     mode: "light",
     primary: {
