@@ -1,5 +1,5 @@
 {
-  "name": "profitpal-client",
+  "name": "caphub-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -29,11 +29,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "predevco": "npm install",
-    "predevfull": "npm install",
+    "predev": "npm install",
     "start": "react-scripts start",
-    "devco": "NODE_ENV=production PORT=5999 react-scripts start",
-    "devfull": "PORT=5999 react-scripts start",
+    "dev": "PORT=5999 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

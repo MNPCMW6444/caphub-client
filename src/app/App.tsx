@@ -36,10 +36,10 @@ const App = () => {
     <CapHubThemeProvider>
       <ProvideMainServer>
         <CapHubAuth />
-        <CapHubSurvey surveyJson={founders} type="founder" />
+        {/* <CapHubSurvey surveyJson={founders} type="founder" />
         <div>
           <h1>Login</h1>
-          {/*  <LinkedIn
+          <LinkedIn
             clientId="<Your LinkedIn Client ID>"
             onSuccess={handleLinkedInSuccess}
             redirectUri="<Your LinkedIn Redirect URI>"
@@ -49,8 +49,8 @@ const App = () => {
             }): JSX.Element {
               return <> console.log(3234)</>;
             }}
-          /> */}
-        </div>
+          /> 
+        </div> */}
       </ProvideMainServer>
     </CapHubThemeProvider>
   );
