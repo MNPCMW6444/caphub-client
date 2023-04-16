@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import LinearProgress, {
   linearProgressClasses,
@@ -7,24 +7,29 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import zxcvbn from "zxcvbn";
 import styled from "@emotion/styled";
+import domain from "../../util/config/domain";
+import { MainServerContext } from "../../context/MainServerContext";
+import UserContext from "../../context/UserContext";
 
 interface CapHubAuthProps {}
 
 const CapHubAuth: React.FC<CapHubAuthProps> = () => {
   const [isLoginForm, setIsLoginForm] = useState<boolean>(true);
+  const [isRegisterHaveCode, setIsRegisterHaveCode] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [key, setKey] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const { getUser } = useContext(UserContext);
 
   const [passwordStrength, setPasswordStrength] = useState<number>(0);
+
+  const axiosInstance = useContext(MainServerContext);
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
@@ -71,15 +76,14 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
     e.preventDefault();
 
     if (isLoginForm) {
-      if (
-        validateEmail(email) &&
-        name.length > 0 &&
-        password === confirmPassword &&
-        passwordStrength >= 3 // Adjust this number to set the minimum password strength requirement
-      ) {
-        // Handle register logic here
-        console.log({ email, password, name, confirmPassword });
+      if (validateEmail(email) && password) {
+        axiosInstance
+          .post(domain + "auth/signin", { email, password })
+          .then(() => getUser());
       }
+    } else if (!isRegisterHaveCode) {
+      axiosInstance.post(domain + "auth/signupreq", { email });
+      setIsRegisterHaveCode(true);
     } else {
       if (
         validateEmail(email) &&
@@ -87,19 +91,30 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
         name.length > 0 &&
         password === confirmPassword
       ) {
-        // Handle register logic here
-        console.log({ email, password, name, confirmPassword });
+        axiosInstance
+          .post(domain + "auth/signupfin", {
+            email,
+            key,
+            fullname: name,
+            password,
+            passwordagain: confirmPassword,
+          })
+          .then(() => getUser());
       }
     }
   };
 
   return (
     <Box width="100%" height="100%" bgcolor="black">
+      {/* Dialog component for Login/Register form */}
       <Dialog open={true} onClose={() => {}}>
+        {/* Dialog title, changes based on whether it is a login or register form */}
         <DialogTitle>{isLoginForm ? "Login" : "Register"}</DialogTitle>
         <DialogContent>
+          {/* Form element that submits data on pressing enter or clicking the submit button */}
           <form onSubmit={handleSubmit}>
-            {!isLoginForm && (
+            {/* Name input field - Only visible in the Register form */}
+            {!isLoginForm && isRegisterHaveCode && (
               <TextField
                 autoFocus
                 margin="dense"
@@ -113,6 +128,7 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
                 onChange={(e) => setName(e.target.value)}
               />
             )}
+            {/* Email input field */}
             <TextField
               autoFocus
               margin="dense"
@@ -125,54 +141,64 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
               helperText={!validateEmail(email) ? "Invalid email" : ""}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <TextField
-              margin="dense"
-              label="Password"
-              type="password"
-              fullWidth
-              variant="outlined"
-              value={password}
-              onChange={handlePasswordChange}
-              error={passwordStrength < 3}
-              helperText={
-                passwordStrength < 3
-                  ? "Password Strength has to be at least Yellow"
-                  : ""
-              }
-            />
-            <Box my={1}>
-              <StyledLinearProgress
-                value={passwordStrength * 25}
-                variant="determinate"
-              />
-            </Box>
-            {!isLoginForm && (
+            {/* Password input field */}
+            {(isLoginForm || isRegisterHaveCode) && (
               <TextField
                 margin="dense"
-                label="Confirm Password"
+                label="Password"
                 type="password"
                 fullWidth
                 variant="outlined"
-                value={confirmPassword}
-                error={password !== confirmPassword}
+                value={password}
+                onChange={handlePasswordChange}
+                error={!isLoginForm && passwordStrength < 3}
                 helperText={
-                  password !== confirmPassword ? "Passwords do not match" : ""
+                  !isLoginForm && passwordStrength < 3
+                    ? "Password Strength has to be at least Yellow"
+                    : ""
                 }
-                onChange={(e) => setConfirmPassword(e.target.value)}
               />
             )}
-            {isLoginForm && (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    color="primary"
-                  />
-                }
-                label="Remember me"
-              />
+            {/* Password strength indicator - Only visible in the Register form */}
+            {!isLoginForm && isRegisterHaveCode && (
+              <Box my={1}>
+                <StyledLinearProgress
+                  value={passwordStrength * 25}
+                  variant="determinate"
+                />
+              </Box>
             )}
+            {/* Confirm Password input field - Only visible in the Register form */}
+            {!isLoginForm && isRegisterHaveCode && (
+              <>
+                {" "}
+                <TextField
+                  margin="dense"
+                  label="Confirm Password"
+                  type="password"
+                  fullWidth
+                  variant="outlined"
+                  value={confirmPassword}
+                  error={password !== confirmPassword}
+                  helperText={
+                    password !== confirmPassword ? "Passwords do not match" : ""
+                  }
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                <TextField
+                  margin="dense"
+                  label="key"
+                  type="password"
+                  fullWidth
+                  variant="outlined"
+                  value={key}
+                  error={!key}
+                  helperText={key ? "" : "Enter the key from you email inbox"}
+                  onChange={(e) => setKey(e.target.value)}
+                />
+              </>
+            )}
+            {/* Submit button */}
             <Box mt={2}>
               <Button
                 type="submit"
@@ -183,6 +209,7 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
                 {isLoginForm ? "Login" : "Register"}
               </Button>
             </Box>
+            {/* Toggle between Login and Register form */}
             <Box mt={1}>
               <Typography align="center">
                 {isLoginForm

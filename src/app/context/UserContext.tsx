@@ -1,28 +1,40 @@
-import Axios from "axios";
-import { createContext, useEffect, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import domain from "../util/config/domain";
+import { MainServerContext } from "./MainServerContext";
+import { CapHubUser } from "../types";
 
-const UserContext = createContext<any>(undefined);
+const UserContext = createContext<{
+  user?: CapHubUser;
+  getUser: () => Promise<void>;
+}>({ getUser: () => Promise.resolve() });
 
-function UserContextProvider(props: any) {
+function UserContextProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState(undefined);
+  const axiosInstance = useContext(MainServerContext);
 
-  async function getUser() {
+  const getUser = useCallback(async () => {
     try {
-      const userRes = await Axios.get(domain + "user/signedin");
+      const userRes = await axiosInstance.get(domain + "auth/signedin");
       setUser(userRes.data);
     } catch (e) {
       setUser(undefined);
     }
-  }
+  }, [axiosInstance]);
 
   useEffect(() => {
     getUser();
-  }, []);
+  }, [getUser]);
 
   return (
     <UserContext.Provider value={{ user, getUser }}>
-      {props.children}
+      {children}
     </UserContext.Provider>
   );
 }

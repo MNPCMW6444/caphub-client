@@ -1,6 +1,6 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
-import axios from "axios";
+import { ReactNode, useContext, useEffect, useRef, useState } from "react";
 import domain from "../../util/config/domain";
+import { MainServerContext } from "../../context/MainServerContext";
 
 interface ProvideMainServerProps {
   children: ReactNode;
@@ -14,9 +14,10 @@ const CHECKING_MESSAGE = "Checking server availability...";
 const BAD_MESSAGE = "Server is not available. Please try again later.";
 const GOOD_STATUS = "good";
 
-const checkServerAvailability = async () => {
+const checkServerAvailability = async (axiosInstance: any) => {
   try {
-    return (await axios.get(domain + "areyoualive")).data.answer === "yes"
+    return (await axiosInstance.get(domain + "areyoualive")).data.answer ===
+      "yes"
       ? GOOD_STATUS
       : BAD_MESSAGE;
   } catch (err) {
@@ -31,6 +32,8 @@ const ProvideMainServer = ({
   const [status, setStatus] = useState<string>(IDLE);
   const statusRef = useRef(status);
 
+  const axiosInstance = useContext(MainServerContext);
+
   useEffect(() => {
     statusRef.current = status;
   }, [status]);
@@ -38,7 +41,7 @@ const ProvideMainServer = ({
   useEffect(() => {
     const setStatusAsyncly = async () => {
       setStatus(CHECKING_MESSAGE);
-      const newStatus = await checkServerAvailability();
+      const newStatus = await checkServerAvailability(axiosInstance);
       setStatus(newStatus);
       if (newStatus !== GOOD_STATUS) {
         setTimeout(setStatusAsyncly, tryInterval || DEFAULT_TRY_INTERVAL);
@@ -47,10 +50,14 @@ const ProvideMainServer = ({
     if (statusRef.current === IDLE) {
       setStatusAsyncly();
     }
-  }, [tryInterval]);
+  }, [axiosInstance, tryInterval]);
 
   if (status === GOOD_STATUS) {
-    return <>{children}</>;
+    return (
+      <MainServerContext.Provider value={axiosInstance}>
+        {children}
+      </MainServerContext.Provider>
+    );
   } else {
     return <div>{status}</div>;
   }
