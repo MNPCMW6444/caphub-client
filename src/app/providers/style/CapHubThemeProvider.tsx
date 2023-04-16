@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { ThemeProvider } from "@mui/material/styles";
-import { capHubTheme } from "../../../content/style/capHubTheme";
+import capHubTheme from "../../../content/style/capHubTheme";
 
 interface CapHubThemeProviderProps {
   children: ReactNode;
