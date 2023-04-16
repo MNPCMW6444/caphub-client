@@ -15,7 +15,26 @@ import domain from "../../util/config/domain";
 import { MainServerContext } from "../../context/MainServerContext";
 import UserContext from "../../context/UserContext";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 interface CapHubAuthProps {}
+
+interface LablesConstants {
+  IDLE: {
+    LOGIN: string;
+    REGISTER: string;
+  };
+  DOING: {
+    LOGIN: string;
+    REGISTER: string;
+  };
+}
+
+const LABELS: LablesConstants = {
+  IDLE: { LOGIN: "Login", REGISTER: "Register" },
+  DOING: { LOGIN: "Logging in...", REGISTER: "Registering..." },
+};
 
 const CapHubAuth: React.FC<CapHubAuthProps> = () => {
   const [isLoginForm, setIsLoginForm] = useState<boolean>(true);
@@ -24,6 +43,7 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
   const [password, setPassword] = useState<string>("");
   const [key, setKey] = useState<string>("");
   const [name, setName] = useState<string>("");
+  const [buttonLabel, setButtonLabel] = useState<keyof LablesConstants>("IDLE");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const { getUser } = useContext(UserContext);
 
@@ -79,7 +99,12 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
       if (validateEmail(email) && password) {
         axiosInstance
           .post(domain + "auth/signin", { email, password })
-          .then(() => getUser());
+          .then(() => getUser())
+          .catch((error) => {
+            setButtonLabel("IDLE");
+            toast.error(error.response.data.clientError);
+          });
+        setButtonLabel("DOING");
       }
     } else if (!isRegisterHaveCode) {
       axiosInstance.post(domain + "auth/signupreq", { email });
@@ -99,7 +124,12 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
             password,
             passwordagain: confirmPassword,
           })
-          .then(() => getUser());
+          .then(() => getUser())
+          .catch((error) => {
+            setButtonLabel("IDLE");
+            toast.error(error.response.data.clientError);
+          });
+        setButtonLabel("DOING");
       }
     }
   };
@@ -117,6 +147,7 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
 
   return (
     <Box width="100%" height="100%" bgcolor="black">
+      <ToastContainer />
       {/* Dialog component for Login/Register form */}
       <Dialog open={true} onClose={() => {}}>
         {/* Dialog title, changes based on whether it is a login or register form */}
@@ -218,7 +249,9 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
                 color="primary"
                 fullWidth
               >
-                {isLoginForm ? "Login" : "Register"}
+                {isLoginForm
+                  ? LABELS[buttonLabel].LOGIN
+                  : LABELS[buttonLabel].REGISTER}
               </Button>
             </Box>
             {/* Add LinkedIn authentication button */}
