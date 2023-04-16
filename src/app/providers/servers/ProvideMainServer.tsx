@@ -7,7 +7,7 @@ interface ProvideMainServerProps {
   tryInterval?: number;
 }
 
-const DEFAULT_TRY_INTERVAL = 500;
+const DEFAULT_TRY_INTERVAL = 3000;
 
 const IDLE = "IDLE";
 const CHECKING_MESSAGE = "Checking server availability...";
@@ -18,9 +18,9 @@ const checkServerAvailability = async () => {
   try {
     return (await axios.get(domain + "areyoualive")).data.answer === "yes"
       ? GOOD_STATUS
-      : BAD_MESSAGE + Math.random();
+      : BAD_MESSAGE;
   } catch (err) {
-    return BAD_MESSAGE + Math.random();
+    return BAD_MESSAGE;
   }
 };
 
