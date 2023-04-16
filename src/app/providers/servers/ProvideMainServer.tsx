@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import domain from "../../util/config/domain";
 
@@ -40,12 +40,10 @@ const ProvideMainServer = ({
       setStatus(CHECKING_MESSAGE);
       const newStatus = await checkServerAvailability();
       setStatus(newStatus);
-
       if (newStatus !== GOOD_STATUS) {
         setTimeout(setStatusAsyncly, tryInterval || DEFAULT_TRY_INTERVAL);
       }
     };
-
     if (statusRef.current === IDLE) {
       setStatusAsyncly();
     }

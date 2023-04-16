@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { ThemeProvider } from "@mui/material/styles";
-import { caphubTheme } from "../../../style/caphubTheme";
+import { capHubTheme } from "../../../content/style/capHubTheme";
 
 interface CapHubThemeProviderProps {
   children: ReactNode;
@@ -9,7 +9,7 @@ interface CapHubThemeProviderProps {
 const CapHubThemeProvider: React.FC<CapHubThemeProviderProps> = ({
   children,
 }) => {
-  return <ThemeProvider theme={caphubTheme}>{children}</ThemeProvider>;
+  return <ThemeProvider theme={capHubTheme}>{children}</ThemeProvider>;
 };
 
 export default CapHubThemeProvider;
