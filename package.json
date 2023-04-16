@@ -29,9 +29,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "predev": "npm install",
+    "predevco": "npm install",
+    "predevfull": "npm install",
     "start": "react-scripts start",
-    "dev": "PORT=5999 react-scripts start",
+    "devco": "NODE_ENV=production PORT=5999 react-scripts start",
+    "devfull": "PORT=5999 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
