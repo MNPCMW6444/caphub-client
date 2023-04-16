@@ -6,7 +6,7 @@ import { Model } from "survey-core";
 import ProggressWheel from "./ProggressWheel";
 // import domain from "../util/config/domain";
 
-export default function PPSurvey({ surveyJson, type }: any) {
+export default function PPSurvey({ surveyJson }: any) {
   const [show, showP] = useState(false);
   const [data, saveData] = useState();
   const survey = new Model(surveyJson);
