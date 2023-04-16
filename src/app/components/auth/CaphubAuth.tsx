@@ -104,6 +104,17 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
     }
   };
 
+  const handleLinkedInLogin = async () => {
+    try {
+      const response = await axiosInstance.get(domain + "auth/linkedin");
+      // Redirect the user to the LinkedIn authentication URL
+      debugger;
+      window.location.href = response.data.redirectUrl;
+    } catch (error) {
+      console.error("Error initiating LinkedIn login:", error);
+    }
+  };
+
   return (
     <Box width="100%" height="100%" bgcolor="black">
       {/* Dialog component for Login/Register form */}
@@ -199,6 +210,7 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
               </>
             )}
             {/* Submit button */}
+
             <Box mt={2}>
               <Button
                 type="submit"
@@ -209,6 +221,20 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
                 {isLoginForm ? "Login" : "Register"}
               </Button>
             </Box>
+            {/* Add LinkedIn authentication button */}
+            {isLoginForm && (
+              <Box mt={2}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  fullWidth
+                  onClick={handleLinkedInLogin}
+                >
+                  Login with LinkedIn
+                </Button>
+              </Box>
+            )}
+
             {/* Toggle between Login and Register form */}
             <Box mt={1}>
               <Typography align="center">
