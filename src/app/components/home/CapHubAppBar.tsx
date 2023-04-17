@@ -78,7 +78,7 @@ const CapHubAppBar: React.FC = () => {
                   handleLogoutClick();
                 }}
               >
-                LOGOUT[logoutState]
+                {LOGOUT[logoutState]}
               </MenuItem>
             </Menu>
           </div>
