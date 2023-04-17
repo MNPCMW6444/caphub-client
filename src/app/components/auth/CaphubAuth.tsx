@@ -102,7 +102,10 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
           .then(() => getUser())
           .catch((error) => {
             setButtonLabel("IDLE");
-            toast.error(error.response.data.clientError);
+            toast.error(
+              error.response.data?.clientError ||
+                "Unknown error, Make sure you are Online"
+            );
           });
         setButtonLabel("DOING");
       }
@@ -127,7 +130,10 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
           .then(() => getUser())
           .catch((error) => {
             setButtonLabel("IDLE");
-            toast.error(error.response.data.clientError);
+            toast.error(
+              error.response.data?.clientError ||
+                "Unknown error, Make sure you are Online"
+            );
           });
         setButtonLabel("DOING");
       }

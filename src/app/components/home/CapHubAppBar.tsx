@@ -39,11 +39,11 @@ const CapHubAppBar: React.FC = () => {
       .get(domain + "auth/signout")
       .then(() => getUser())
       .catch((error) => {
+        setLogoutState("IDLE");
         toast.error(
           error.response.data?.clientError ||
             "Unknown error, Make sure you are Online"
         );
-        setLogoutState("IDLE");
       });
 
   return (
