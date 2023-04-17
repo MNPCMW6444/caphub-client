@@ -103,7 +103,8 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
           .catch((error) => {
             setButtonLabel("IDLE");
             toast.error(
-              error.response.data?.clientError ||
+              error?.response?.data.clientError ||
+                error?.message ||
                 "Unknown error, Make sure you are Online"
             );
           });
@@ -131,7 +132,8 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
           .catch((error) => {
             setButtonLabel("IDLE");
             toast.error(
-              error.response.data?.clientError ||
+              error?.response?.data.clientError ||
+                error?.message ||
                 "Unknown error, Make sure you are Online"
             );
           });
@@ -144,7 +146,6 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
     try {
       const response = await axiosInstance.get(domain + "auth/linkedin");
       // Redirect the user to the LinkedIn authentication URL
-      debugger;
       window.location.href = response.data.redirectUrl;
     } catch (error) {
       console.error("Error initiating LinkedIn login:", error);

@@ -41,7 +41,8 @@ const CapHubAppBar: React.FC = () => {
       .catch((error) => {
         setLogoutState("IDLE");
         toast.error(
-          error.response.data?.clientError ||
+          error?.response?.data.clientError ||
+            error?.message ||
             "Unknown error, Make sure you are Online"
         );
       });
