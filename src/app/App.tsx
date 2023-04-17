@@ -3,15 +3,14 @@ import ProvideMainServer from "./providers/servers/ProvideMainServer";
 import { UserContextProvider } from "./context/UserContext";
 import Home from "./components/Home";
 
-const App = () => {
-  return (
-    <CapHubThemeProvider>
-      <ProvideMainServer>
-        <UserContextProvider>
-          <Home />
-        </UserContextProvider>
-      </ProvideMainServer>
-    </CapHubThemeProvider>
-  );
-};
+const App = () => (
+  <CapHubThemeProvider>
+    <ProvideMainServer>
+      <UserContextProvider>
+        <Home />
+      </UserContextProvider>
+    </ProvideMainServer>
+  </CapHubThemeProvider>
+);
+
 export default App;

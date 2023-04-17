@@ -144,13 +144,9 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
 
   const handleLinkedInLogin = async () => {
     try {
-      /*  const response = await axiosInstance.get(
-        domain + "auth/linkedin/authorize"
-      ); */
-
       const clientId = "773yuwtf0s7nzw";
       const redirectUri = encodeURIComponent(
-        "http://localhost:6555/auth/linkedin/callback"
+        `${domain}` // Update this to point to your PWA route handling LinkedIn auth
       );
       const scope = encodeURIComponent("r_emailaddress r_liteprofile");
       const responseType = "code";
@@ -158,9 +154,6 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
       const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=${responseType}&redirect_uri=${redirectUri}&scope=${scope}&client_id=${clientId}`;
 
       window.location.href = linkedinAuthUrl;
-
-      // Redirect the user to the LinkedIn authentication URL
-      // window.location.href = response.data.redirectUrl;
     } catch (error) {
       console.error("Error initiating LinkedIn login:", error);
     }
