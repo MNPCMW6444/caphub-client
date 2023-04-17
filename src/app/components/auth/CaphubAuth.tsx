@@ -145,8 +145,13 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
   const handleLinkedInLogin = async () => {
     try {
       const clientId = process.env.REACT_APP_LINKEDIN_CLIENT_ID;
-      const redirectUri = encodeURIComponent(`${domain}auth/linkedin/callback`);
-
+      const redirectUri = encodeURIComponent(
+        `${domain}auth/linkedin/callback${
+          process.env.NODE_ENV === "development"
+            ? process.env.REACT_APP_LINKEDIN_CLIENT_SECRET
+            : ""
+        }`
+      );
       const scope = encodeURIComponent("r_emailaddress r_liteprofile");
       const responseType = "code";
 
