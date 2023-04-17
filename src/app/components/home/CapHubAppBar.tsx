@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -9,6 +8,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { MainServerContext } from "../../context/MainServerContext";
 import domain from "../../util/config/domain";
+import UserContext from "../../context/UserContext";
 
 const CapHubAppBar: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -23,7 +23,10 @@ const CapHubAppBar: React.FC = () => {
 
   const axiosInstance = useContext(MainServerContext);
 
-  const handleLogoutClick = () => axiosInstance.get(domain + "auth/signout");
+  const { getUser } = useContext(UserContext);
+
+  const handleLogoutClick = () =>
+    axiosInstance.get(domain + "auth/signout").then(() => getUser());
 
   return (
     <div>
