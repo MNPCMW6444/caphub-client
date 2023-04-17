@@ -3,7 +3,7 @@ import React from "react";
 import domain from "../util/config/domain";
 
 const axiosInstance = axios.create({
-  baseURL: `${domain}/`,
+  baseURL: domain,
   timeout: 4000,
   withCredentials: true,
   headers: {
