@@ -10,8 +10,16 @@ import { MainServerContext } from "../../context/MainServerContext";
 import domain from "../../util/config/domain";
 import UserContext from "../../context/UserContext";
 
+interface LogoutConstants {
+  IDLE: string;
+  DOING: string;
+}
+const LOGOUT: LogoutConstants = { IDLE: "Logout", DOING: "Logging out..." };
+
 const CapHubAppBar: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [logoutState, setLogoutState] =
+    React.useState<keyof LogoutConstants>("IDLE");
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -26,7 +34,10 @@ const CapHubAppBar: React.FC = () => {
   const { getUser } = useContext(UserContext);
 
   const handleLogoutClick = () =>
-    axiosInstance.get(domain + "auth/signout").then(() => getUser());
+    axiosInstance
+      .get(domain + "auth/signout")
+      .then(() => getUser())
+      .catch(() => setLogoutState("IDLE"));
 
   return (
     <div>
@@ -61,7 +72,14 @@ const CapHubAppBar: React.FC = () => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  setLogoutState("DOING");
+                  handleLogoutClick();
+                }}
+              >
+                LOGOUT[logoutState]
+              </MenuItem>
             </Menu>
           </div>
         </Toolbar>
