@@ -9,6 +9,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { MainServerContext } from "../../context/MainServerContext";
 import domain from "../../util/config/domain";
 import UserContext from "../../context/UserContext";
+import { toast } from "react-toastify";
 
 interface LogoutConstants {
   IDLE: string;
@@ -37,7 +38,10 @@ const CapHubAppBar: React.FC = () => {
     axiosInstance
       .get(domain + "auth/signout")
       .then(() => getUser())
-      .catch(() => setLogoutState("IDLE"));
+      .catch((error) => {
+        toast.error(error.response.data.clientError);
+        setLogoutState("IDLE");
+      });
 
   return (
     <div>
