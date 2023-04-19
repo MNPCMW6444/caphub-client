@@ -8,7 +8,7 @@ import {
 } from "react";
 import domain from "../util/config/domain";
 import { MainServerContext } from "./MainServerContext";
-import { CapHubUser } from "../types";
+import { CapHubUser } from "@caphub-funding/caphub-types";
 
 const UserContext = createContext<{
   user?: CapHubUser;
