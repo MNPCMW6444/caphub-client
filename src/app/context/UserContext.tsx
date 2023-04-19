@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import domain from "../util/config/domain";
-import { MainServerContext } from "./MainServerContext";
+import { MainServerContext } from "@caphub-funding/mainserver-provider";
 import { CapHubUser } from "@caphub-funding/caphub-types";
 
 const UserContext = createContext<{
