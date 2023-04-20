@@ -6,10 +6,10 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { MainServerContext } from "@caphub-funding/mainserver-provider";
 import domain from "../../util/config/domain";
 import UserContext from "../../context/UserContext";
 import { toast } from "react-toastify";
+import { MainServerContext } from "@caphub-funding/mainserver-provider";
 
 interface LogoutConstants {
   IDLE: string;
