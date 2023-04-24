@@ -1,4 +1,8 @@
-import React, { useContext } from "react";
+import CapHubAuth from "../auth/CapHubAuth";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import MyAccount from "./my-account/MyAccount";
+import Home from "./home/Home";
+import { MouseEvent, FC, useContext, useState, useEffect } from "react";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -17,22 +21,42 @@ interface LogoutConstants {
 }
 const LOGOUT: LogoutConstants = { IDLE: "Logout", DOING: "Logging out..." };
 
-const CapHubAppBar: React.FC = () => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [logoutState, setLogoutState] =
-    React.useState<keyof LogoutConstants>("IDLE");
+const CapHubRouter: FC = () => {
+  const { user } = useContext(UserContext);
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  return (
+    <BrowserRouter>
+      {user ? <AuthenticatedApp /> : <CapHubAuth />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/my-account" element={<MyAccount />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+const AuthenticatedApp: FC = () => {
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [logoutState, setLogoutState] = useState<keyof LogoutConstants>("IDLE");
+  const axiosInstance = useContext(MainServerContext);
+  const { getUser } = useContext(UserContext);
+
+  useEffect(() => {
+    return () => {
+      setAnchorEl(null);
+      setLogoutState("IDLE");
+    };
+  }, [logoutState]);
+
+  const handleMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const axiosInstance = useContext(MainServerContext);
-
-  const { getUser } = useContext(UserContext);
 
   const handleLogoutClick = () =>
     axiosInstance
@@ -48,7 +72,7 @@ const CapHubAppBar: React.FC = () => {
       });
 
   return (
-    <div>
+    <>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -80,6 +104,9 @@ const CapHubAppBar: React.FC = () => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
+              <MenuItem onClick={() => navigate("/my-account")}>
+                My Account
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   setLogoutState("DOING");
@@ -92,8 +119,8 @@ const CapHubAppBar: React.FC = () => {
           </div>
         </Toolbar>
       </AppBar>
-    </div>
+    </>
   );
 };
 
-export default CapHubAppBar;
+export default CapHubRouter;

@@ -1,13 +1,13 @@
 import CapHubThemeProvider from "./providers/style/CapHubThemeProvider";
 import { UserContextProvider } from "./context/UserContext";
-import Home from "./components/Home";
+import CapHubRouter from "./components/caphub-router/CapHubRouter";
 import { ProvideMainServer } from "@caphub-funding/mainserver-provider";
 
 const App = () => (
   <CapHubThemeProvider>
     <ProvideMainServer>
       <UserContextProvider>
-        <Home />
+        <CapHubRouter />
       </UserContextProvider>
     </ProvideMainServer>
   </CapHubThemeProvider>

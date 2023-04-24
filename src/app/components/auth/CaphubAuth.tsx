@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useState } from "react";
+import { ChangeEvent, FC, FormEvent, useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import LinearProgress, {
   linearProgressClasses,
@@ -36,7 +36,7 @@ const LABELS: LablesConstants = {
   DOING: { LOGIN: "Logging in...", REGISTER: "Registering..." },
 };
 
-const CapHubAuth: React.FC<CapHubAuthProps> = () => {
+const CapHubAuth: FC<CapHubAuthProps> = () => {
   const [isLoginForm, setIsLoginForm] = useState<boolean>(true);
   const [isRegisterHaveCode, setIsRegisterHaveCode] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
@@ -51,7 +51,7 @@ const CapHubAuth: React.FC<CapHubAuthProps> = () => {
 
   const axiosInstance = useContext(MainServerContext);
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
     setPasswordStrength(zxcvbn(newPassword).score);
