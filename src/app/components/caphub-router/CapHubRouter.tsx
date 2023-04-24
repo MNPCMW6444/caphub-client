@@ -1,6 +1,7 @@
 import CapHubAuth from "../auth/CapHubAuth";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import MyAccount from "./my-account/MyAccount";
+import About from "./about/About";
 import Home from "./home/Home";
 import { MouseEvent, FC, useContext, useState, useEffect } from "react";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -14,6 +15,7 @@ import domain from "../../util/config/domain";
 import UserContext from "../../context/UserContext";
 import { toast } from "react-toastify";
 import { MainServerContext } from "@caphub-funding/mainserver-provider";
+import { Divider } from "@mui/material";
 
 interface LogoutConstants {
   IDLE: string;
@@ -31,6 +33,7 @@ const CapHubRouter: FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/my-account" element={<MyAccount />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </BrowserRouter>
   );
@@ -115,6 +118,8 @@ const AuthenticatedApp: FC = () => {
               >
                 {LOGOUT[logoutState]}
               </MenuItem>
+              <Divider />
+              <MenuItem onClick={() => navigate("/about")}>About</MenuItem>
             </Menu>
           </div>
         </Toolbar>
