@@ -36,6 +36,38 @@ const LABELS: LablesConstants = {
   DOING: { LOGIN: "Logging in...", REGISTER: "Registering..." },
 };
 
+export const StyledLinearProgressHOC = (passwordStrength: number) =>
+  styled(LinearProgress)(() => {
+    let x = "";
+    switch (passwordStrength) {
+      case 0:
+        break;
+      case 1:
+        x = "red";
+        break;
+      case 2:
+        x = "orange";
+        break;
+      case 3:
+        x = "yellow";
+        break;
+      case 4:
+        x = "green";
+        break;
+      default:
+        x = "gray";
+        break;
+    }
+    return {
+      height: 10,
+      borderRadius: 5,
+      [`& .${linearProgressClasses.bar}`]: {
+        borderRadius: 5,
+        backgroundColor: x,
+      },
+    };
+  });
+
 const CapHubAuth: FC<CapHubAuthProps> = () => {
   const [isLoginForm, setIsLoginForm] = useState<boolean>(true);
   const [isRegisterHaveCode, setIsRegisterHaveCode] = useState<boolean>(false);
@@ -56,31 +88,6 @@ const CapHubAuth: FC<CapHubAuthProps> = () => {
     setPassword(newPassword);
     setPasswordStrength(zxcvbn(newPassword).score);
   };
-
-  const getPasswordStrengthColor = () => {
-    switch (passwordStrength) {
-      case 0:
-      case 1:
-        return "red";
-      case 2:
-        return "orange";
-      case 3:
-        return "yellow";
-      case 4:
-        return "green";
-      default:
-        return "gray";
-    }
-  };
-
-  const StyledLinearProgress = styled(LinearProgress)(() => ({
-    height: 10,
-    borderRadius: 5,
-    [`& .${linearProgressClasses.bar}`]: {
-      borderRadius: 5,
-      backgroundColor: getPasswordStrengthColor(),
-    },
-  }));
 
   const toggleForm = () => {
     setIsLoginForm(!isLoginForm);
@@ -162,6 +169,8 @@ const CapHubAuth: FC<CapHubAuthProps> = () => {
       console.error("Error initiating LinkedIn login:", error);
     }
   };
+
+  const StyledLinearProgress = StyledLinearProgressHOC(passwordStrength);
 
   return (
     <Box width="100%" height="100%" bgcolor="black">

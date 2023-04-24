@@ -1,8 +1,11 @@
 import { FC, useState, useEffect, useContext } from "react";
 import styled from "styled-components";
-import { Button, Container, TextField, Typography } from "@mui/material";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { MainServerContext } from "@caphub-funding/mainserver-provider";
 import UserContext from "../../../context/UserContext";
+import { toast } from "react-toastify";
+import { StyledLinearProgressHOC } from "../../auth/CapHubAuth";
+import zxcvbn from "zxcvbn";
 
 const StyledContainer = styled(Container)`
   display: flex;
@@ -21,7 +24,7 @@ const MyAccount: FC = () => {
   const { user, getUser } = useContext(UserContext);
   const [name, setName] = useState(user?.name || "");
   const [password, setPassword] = useState("");
-  const [repeatPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
@@ -40,7 +43,7 @@ const MyAccount: FC = () => {
         { withCredentials: true }
       );
       setIsEditingName(false);
-      alert("Name updated successfully!");
+      toast("Name updated successfully!");
     } catch (err) {
       console.error(err);
     }
@@ -54,19 +57,25 @@ const MyAccount: FC = () => {
         { withCredentials: true }
       );
       setIsEditingPassword(false);
-      alert("Password updated successfully!");
+      toast("Password updated successfully!");
     } catch (err) {
       console.error(err);
     }
   };
 
   useEffect(() => {
-    if (password && repeatPassword && password === repeatPassword) {
-      setIsPasswordValid(true);
-    } else {
-      setIsPasswordValid(false);
-    }
+    setIsPasswordValid(
+      !!(password && repeatPassword && password === repeatPassword)
+    );
   }, [password, repeatPassword]);
+
+  const [passwordStrength, setPasswordStrength] = useState<number>(0);
+
+  const StyledLinearProgress = StyledLinearProgressHOC(passwordStrength);
+
+  useEffect(() => {
+    setPasswordStrength(zxcvbn(password).score);
+  }, [password]);
 
   return (
     <StyledContainer maxWidth="xs">
@@ -151,19 +160,23 @@ const MyAccount: FC = () => {
         fullWidth
       />
       {isEditingPassword && (
-        <StyledTextField
-          label="Confirm Password"
-          value={repeatPassword}
-          type="password"
-          onChange={(e) =>
-            setIsPasswordValid(
-              e.target.value === password && e.target.value.length > 0
-            )
-          }
-          error={!isPasswordValid}
-          helperText={!isPasswordValid && "Passwords do not match"}
-          fullWidth
-        />
+        <>
+          <StyledTextField
+            label="Confirm Password"
+            type="password"
+            value={repeatPassword}
+            onChange={(e) => setRepeatPassword(e.target.value)}
+            error={!isPasswordValid}
+            helperText={!isPasswordValid && "Passwords do not match"}
+            fullWidth
+          />
+          <Box my={1}>
+            <StyledLinearProgress
+              value={passwordStrength * 25}
+              variant="determinate"
+            />
+          </Box>
+        </>
       )}
     </StyledContainer>
   );
