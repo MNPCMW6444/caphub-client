@@ -200,6 +200,7 @@ const CapHubAuth: FC<CapHubAuthProps> = () => {
             {/* Email input field */}
             <TextField
               autoFocus
+              data-testid="email"
               margin="dense"
               label="Email Address"
               type="email"
@@ -214,6 +215,7 @@ const CapHubAuth: FC<CapHubAuthProps> = () => {
             {(isLoginForm || isRegisterHaveCode) && (
               <TextField
                 margin="dense"
+                data-testid="password"
                 label="Password"
                 type="password"
                 fullWidth
