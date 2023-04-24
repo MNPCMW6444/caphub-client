@@ -82,94 +82,102 @@ const MyAccount: FC = () => {
       <Typography variant="h4" gutterBottom>
         My Account
       </Typography>
-      <StyledTextField
-        label="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        InputProps={{
-          readOnly: !isEditingName,
-          endAdornment: (
-            <>
-              {!isEditingName && (
-                <Button
-                  variant="outlined"
-                  onClick={() => setIsEditingName(true)}
-                >
-                  Edit
-                </Button>
-              )}
-              {isEditingName && (
-                <>
-                  <Button variant="contained" onClick={handleUpdateName}>
-                    Save
-                  </Button>
+      <Box my={2}>
+        <StyledTextField
+          label="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          InputProps={{
+            readOnly: !isEditingName,
+            endAdornment: (
+              <>
+                {!isEditingName && (
                   <Button
                     variant="outlined"
-                    onClick={() => setIsEditingName(false)}
+                    onClick={() => setIsEditingName(true)}
                   >
-                    Cancel
+                    Edit
                   </Button>
-                </>
-              )}
-            </>
-          ),
-        }}
-        fullWidth
-      />
-      <StyledTextField
-        label="Email"
-        value={user?.email}
-        InputProps={{
-          readOnly: true,
-        }}
-        fullWidth
-      />
-      <StyledTextField
-        label="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        type="password"
-        InputProps={{
-          readOnly: !isEditingPassword,
-          endAdornment: (
-            <>
-              {!isEditingPassword && (
-                <Button
-                  variant="outlined"
-                  onClick={() => setIsEditingPassword(true)}
-                >
-                  Edit
-                </Button>
-              )}
-              {isEditingPassword && (
-                <>
-                  <Button variant="contained" onClick={handleUpdatePassword}>
-                    Save
-                  </Button>
+                )}
+                {isEditingName && (
+                  <>
+                    <Button variant="contained" onClick={handleUpdateName}>
+                      Save
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => setIsEditingName(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                )}
+              </>
+            ),
+          }}
+          fullWidth
+        />
+      </Box>
+      <Box my={2}>
+        <StyledTextField
+          label="Email"
+          value={user?.email}
+          InputProps={{
+            readOnly: true,
+          }}
+          fullWidth
+        />
+      </Box>
+      <Box my={2}>
+        <StyledTextField
+          label="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+          InputProps={{
+            readOnly: !isEditingPassword,
+            endAdornment: (
+              <>
+                {!isEditingPassword && (
                   <Button
                     variant="outlined"
-                    onClick={() => setIsEditingPassword(false)}
+                    onClick={() => setIsEditingPassword(true)}
                   >
-                    Cancel
+                    Edit
                   </Button>
-                </>
-              )}
-            </>
-          ),
-        }}
-        fullWidth
-      />
+                )}
+                {isEditingPassword && (
+                  <>
+                    <Button variant="contained" onClick={handleUpdatePassword}>
+                      Save
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => setIsEditingPassword(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                )}
+              </>
+            ),
+          }}
+          fullWidth
+        />
+      </Box>
       {isEditingPassword && (
         <>
-          <StyledTextField
-            label="Confirm Password"
-            type="password"
-            value={repeatPassword}
-            onChange={(e) => setRepeatPassword(e.target.value)}
-            error={!isPasswordValid}
-            helperText={!isPasswordValid && "Passwords do not match"}
-            fullWidth
-          />
+          <Box my={2}>
+            <StyledTextField
+              label="Confirm Password"
+              type="password"
+              value={repeatPassword}
+              onChange={(e) => setRepeatPassword(e.target.value)}
+              error={!isPasswordValid}
+              helperText={!isPasswordValid && "Passwords do not match"}
+              fullWidth
+            />
+          </Box>
           <Box my={1}>
             <StyledLinearProgress
               value={passwordStrength * 25}
