@@ -274,6 +274,7 @@ const CapHubAuth: FC<CapHubAuthProps> = () => {
             <Box mt={2}>
               <Button
                 type="submit"
+                data-testid="login-button"
                 variant="contained"
                 color="primary"
                 fullWidth
