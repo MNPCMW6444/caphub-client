@@ -31,7 +31,6 @@ const CapHubRouter: FC = () => {
       {user ? <AuthenticatedApp /> : <CapHubAuth />}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
         <Route path="/my-account" element={<MyAccount />} />
         <Route path="/about" element={<About />} />
       </Routes>
@@ -107,6 +106,7 @@ const AuthenticatedApp: FC = () => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
+              <MenuItem onClick={() => navigate("/")}>Home</MenuItem>
               <MenuItem onClick={() => navigate("/my-account")}>
                 My Account
               </MenuItem>

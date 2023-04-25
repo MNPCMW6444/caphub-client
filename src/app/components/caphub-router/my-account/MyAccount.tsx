@@ -16,6 +16,7 @@ const StyledContainer = styled(Container)`
 `;
 
 const StyledTextField = styled(TextField)`
+  width: 100%;
   margin-bottom: ${(props) =>
     props.theme.spacing instanceof Function ? props.theme.spacing(2) : 2}px;
 `;
@@ -34,6 +35,10 @@ const MyAccount: FC = () => {
   useEffect(() => {
     getUser();
   }, [getUser]);
+
+  useEffect(() => {
+    user && setName(user.name);
+  }, [user]);
 
   const handleUpdateName = async () => {
     try {
@@ -84,8 +89,11 @@ const MyAccount: FC = () => {
       </Typography>
       <Box my={2}>
         <StyledTextField
+          InputLabelProps={{
+            shrink: user?.name ? true : undefined,
+          }}
           label="Name"
-          value={name}
+          value={name || ""}
           onChange={(e) => setName(e.target.value)}
           InputProps={{
             readOnly: !isEditingName,
@@ -120,8 +128,11 @@ const MyAccount: FC = () => {
       </Box>
       <Box my={2}>
         <StyledTextField
+          InputLabelProps={{
+            shrink: user?.email ? true : undefined,
+          }}
           label="Email"
-          value={user?.email}
+          value={user?.email || ""}
           InputProps={{
             readOnly: true,
           }}
@@ -130,8 +141,11 @@ const MyAccount: FC = () => {
       </Box>
       <Box my={2}>
         <StyledTextField
+          InputLabelProps={{
+            shrink: true,
+          }}
           label="Password"
-          value={password}
+          value={password || ""}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
           InputProps={{
