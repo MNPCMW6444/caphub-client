@@ -1,7 +1,7 @@
 import { FC, useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import { MainServerContext } from "@caphub-funding/mainserver-provider";
+import { MainServerContext } from "@caphub-group/mainserver-provider";
 import UserContext from "../../../context/UserContext";
 import { toast } from "react-toastify";
 import { StyledLinearProgressHOC } from "../../auth/CapHubAuth";

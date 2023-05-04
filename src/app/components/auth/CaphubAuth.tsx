@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import zxcvbn from "zxcvbn";
 import styled from "@emotion/styled";
 import domain from "../../util/config/domain";
-import { MainServerContext } from "@caphub-funding/mainserver-provider";
+import { MainServerContext } from "@caphub-group/mainserver-provider";
 import UserContext from "../../context/UserContext";
 
 import { ToastContainer, toast } from "react-toastify";

@@ -14,7 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import domain from "../../util/config/domain";
 import UserContext from "../../context/UserContext";
 import { toast } from "react-toastify";
-import { MainServerContext } from "@caphub-funding/mainserver-provider";
+import { MainServerContext } from "@caphub-group/mainserver-provider";
 import { Divider } from "@mui/material";
 
 interface LogoutConstants {

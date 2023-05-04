@@ -34,11 +34,11 @@ const About = () => {
         To learn more about our services and the CapHub team, please visit our
         website at{" "}
         <StyledLink
-          href="https://caphub-funding.com"
+          href="https://caphub-group.com"
           target="_blank"
           rel="noreferrer"
         >
-          caphub-funding.com
+          caphub-group.com
         </StyledLink>
         . We look forward to helping your business navigate the complex world of
         debt financing and find the most suitable funding options.
