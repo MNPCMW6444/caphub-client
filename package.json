@@ -1,6 +1,6 @@
 {
   "name": "caphub-client",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "private": true,
   "dependencies": {
     "@caphub-group/caphub-types": "^3.9.60",
