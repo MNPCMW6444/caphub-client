@@ -6,6 +6,9 @@ import {
   IconButton,
   MenuItem,
   Menu,
+  Box,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -31,6 +34,9 @@ const CaphubAppBar: React.FC<CaphubAppBarProps> = ({
     setAnchorEl(null);
   };
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   return (
     <AppBar position="fixed">
       <Toolbar>
@@ -43,9 +49,21 @@ const CaphubAppBar: React.FC<CaphubAppBarProps> = ({
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Caphub
-        </Typography>
+
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            pl: isMobile
+              ? (theme) => theme.spacing(1)
+              : (theme) => theme.spacing(32), // Add left padding to account for the sidebar width when not on mobile
+          }}
+        >
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Caphub
+          </Typography>
+        </Box>
         {user && (
           <>
             <IconButton

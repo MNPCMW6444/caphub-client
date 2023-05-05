@@ -36,7 +36,7 @@ const CaphubRouter: FC = () => {
               flexGrow: 1,
               p: 3,
               pt: isMobile
-                ? (theme) => theme.spacing(8)
+                ? (theme) => theme.spacing(9)
                 : (theme) => theme.spacing(1), // Add top padding to account for the fixed AppBar
               pl: isMobile
                 ? (theme) => theme.spacing(1)

@@ -12,7 +12,7 @@ const StyledContainer = styled(Container)`
   flex-direction: column;
   align-items: center;
   padding-top: ${(props) =>
-    props.theme.spacing instanceof Function ? props.theme.spacing(4) : 4}px;
+    props.theme.spacing instanceof Function ? props.theme.spacing(32) : 32}px;
 `;
 
 const StyledTextField = styled(TextField)`
