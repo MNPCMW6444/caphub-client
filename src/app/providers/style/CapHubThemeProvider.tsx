@@ -1,13 +1,13 @@
 import { FC, ReactNode } from "react";
 import { ThemeProvider } from "@mui/material/styles";
-import capHubTheme from "../../../content/style/capHubTheme";
+import caphubTheme from "../../../content/style/caphubTheme";
 
-interface CapHubThemeProviderProps {
+interface CaphubThemeProviderProps {
   children: ReactNode;
 }
 
-const CapHubThemeProvider: FC<CapHubThemeProviderProps> = ({ children }) => {
-  return <ThemeProvider theme={capHubTheme}>{children}</ThemeProvider>;
+const CaphubThemeProvider: FC<CaphubThemeProviderProps> = ({ children }) => {
+  return <ThemeProvider theme={caphubTheme}>{children}</ThemeProvider>;
 };
 
-export default CapHubThemeProvider;
+export default CaphubThemeProvider;

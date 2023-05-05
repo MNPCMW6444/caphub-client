@@ -4,7 +4,7 @@ import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { MainServerContext } from "@caphub-group/mainserver-provider";
 import UserContext from "../../../context/UserContext";
 import { toast } from "react-toastify";
-import { StyledLinearProgressHOC } from "../../auth/CapHubAuth";
+import { StyledLinearProgressHOC } from "../../auth/CaphubAuth";
 import zxcvbn from "zxcvbn";
 
 const StyledContainer = styled(Container)`

@@ -1,6 +1,6 @@
 import { ThemeOptions, createTheme } from "@mui/material/styles";
 
-export const capHubTheme: ThemeOptions = createTheme({
+export const caphubTheme: ThemeOptions = createTheme({
   palette: {
     primary: {
       main: "#3f3f3f", // A shade of gray for the primary color
@@ -50,4 +50,4 @@ export const capHubTheme: ThemeOptions = createTheme({
   },
 });
 
-export default capHubTheme;
+export default caphubTheme;

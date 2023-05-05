@@ -7,11 +7,11 @@ import {
   useState,
 } from "react";
 import domain from "../util/config/domain";
-import { CapHubUser } from "@caphub-group/caphub-types";
+import { CaphubUser } from "@caphub-group/caphub-types";
 import { MainServerContext } from "@caphub-group/mainserver-provider";
 
 const UserContext = createContext<{
-  user?: CapHubUser;
+  user?: CaphubUser;
   getUser: () => Promise<void>;
 }>({ getUser: () => Promise.resolve() });
 

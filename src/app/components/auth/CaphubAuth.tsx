@@ -18,7 +18,7 @@ import UserContext from "../../context/UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-interface CapHubAuthProps {}
+interface CaphubAuthProps {}
 
 interface LablesConstants {
   IDLE: {
@@ -68,7 +68,7 @@ export const StyledLinearProgressHOC = (passwordStrength: number) =>
     };
   });
 
-const CapHubAuth: FC<CapHubAuthProps> = () => {
+const CaphubAuth: FC<CaphubAuthProps> = () => {
   const [isLoginForm, setIsLoginForm] = useState<boolean>(true);
   const [isRegisterHaveCode, setIsRegisterHaveCode] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
@@ -316,4 +316,4 @@ const CapHubAuth: FC<CapHubAuthProps> = () => {
   );
 };
 
-export default CapHubAuth;
+export default CaphubAuth;

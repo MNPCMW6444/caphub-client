@@ -1,4 +1,4 @@
-import CapHubAuth from "../auth/CapHubAuth";
+import CaphubAuth from "../auth/CaphubAuth";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import MyAccount from "./my-account/MyAccount";
 import About from "./about/About";
@@ -23,12 +23,12 @@ interface LogoutConstants {
 }
 const LOGOUT: LogoutConstants = { IDLE: "Logout", DOING: "Logging out..." };
 
-const CapHubRouter: FC = () => {
+const CaphubRouter: FC = () => {
   const { user } = useContext(UserContext);
 
   return (
     <BrowserRouter>
-      {user ? <AuthenticatedApp /> : <CapHubAuth />}
+      {user ? <AuthenticatedApp /> : <CaphubAuth />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/my-account" element={<MyAccount />} />
@@ -78,7 +78,7 @@ const AuthenticatedApp: FC = () => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            CapHub
+            Caphub
           </Typography>
           <div>
             <IconButton
@@ -128,4 +128,4 @@ const AuthenticatedApp: FC = () => {
   );
 };
 
-export default CapHubRouter;
+export default CaphubRouter;

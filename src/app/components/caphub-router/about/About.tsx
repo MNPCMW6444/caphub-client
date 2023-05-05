@@ -21,17 +21,17 @@ const About = () => {
   return (
     <StyledBox>
       <StyledTypography variant="h4" gutterBottom>
-        About CapHub
+        About Caphub
       </StyledTypography>
       <StyledTypography variant="body1" paragraph>
-        CapHub is an innovative online platform that connects businesses with
+        Caphub is an innovative online platform that connects businesses with
         potential debt lenders. Our mission is to streamline the process of
         securing funding by leveraging advanced algorithms and data analysis to
         efficiently match startups with the most compatible investors.
       </StyledTypography>
 
       <StyledTypography variant="body1" paragraph>
-        To learn more about our services and the CapHub team, please visit our
+        To learn more about our services and the Caphub team, please visit our
         website at{" "}
         <StyledLink
           href="https://caphub-group.com"

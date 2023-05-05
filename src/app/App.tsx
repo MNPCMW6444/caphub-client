@@ -1,16 +1,16 @@
-import CapHubThemeProvider from "./providers/style/CapHubThemeProvider";
+import CaphubThemeProvider from "./providers/style/CaphubThemeProvider";
 import { UserContextProvider } from "./context/UserContext";
-import CapHubRouter from "./components/caphub-router/CapHubRouter";
+import CaphubRouter from "./components/caphub-router/CaphubRouter";
 import { ProvideMainServer } from "@caphub-group/mainserver-provider";
 
 const App = () => (
-  <CapHubThemeProvider>
+  <CaphubThemeProvider>
     <ProvideMainServer>
       <UserContextProvider>
-        <CapHubRouter />
+        <CaphubRouter />
       </UserContextProvider>
     </ProvideMainServer>
-  </CapHubThemeProvider>
+  </CaphubThemeProvider>
 );
 
 export default App;
