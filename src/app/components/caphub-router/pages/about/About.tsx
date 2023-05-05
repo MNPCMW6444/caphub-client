@@ -4,7 +4,7 @@ import version from "../../../../util/version";
 
 const StyledBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: "red" /* theme.palette.background.default */,
 }));
 
 const StyledTypography = styled(Typography)(({ theme }) => ({

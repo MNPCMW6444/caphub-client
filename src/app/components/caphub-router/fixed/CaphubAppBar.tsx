@@ -1,79 +1,86 @@
-import { FC, useContext, useState, useEffect } from "react";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
+import { MouseEvent, useContext, useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  MenuItem,
+  Menu,
+} from "@mui/material";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
-import domain from "../../../util/config/domain";
-import { toast } from "react-toastify";
-import { MainServerContext } from "@caphub-group/mainserver-provider";
+import { useNavigate } from "react-router-dom";
 import UserContext from "../../../context/UserContext";
 
-interface LogoutConstants {
-  IDLE: string;
-  DOING: string;
-}
-const LOGOUT: LogoutConstants = { IDLE: "Logout", DOING: "Logging out..." };
-
 interface CaphubAppBarProps {
-  onMobileDrawerToggle?: () => void;
+  onMobileDrawerToggle: () => void;
 }
 
-const CaphubAppBar: FC<CaphubAppBarProps> = ({ onMobileDrawerToggle }) => {
-  const [logoutState, setLogoutState] = useState<keyof LogoutConstants>("IDLE");
-  const axiosInstance = useContext(MainServerContext);
-  const { getUser } = useContext(UserContext);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+const CaphubAppBar: React.FC<CaphubAppBarProps> = ({
+  onMobileDrawerToggle,
+}) => {
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  useEffect(() => {
-    return () => {
-      setLogoutState("IDLE");
-    };
-  }, [logoutState]);
+  const handleMenu = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  const handleLogoutClick = () =>
-    axiosInstance
-      .get(domain + "auth/signout")
-      .then(() => getUser())
-      .catch((error) => {
-        setLogoutState("IDLE");
-        toast.error(
-          error?.response?.data.clientError ||
-            error?.message ||
-            "Unknown error, Make sure you are Online"
-        );
-      });
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <AppBar position="fixed">
       <Toolbar>
-        {isMobile && (
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            onClick={onMobileDrawerToggle}
-          >
-            <MenuIcon />
-          </IconButton>
-        )}
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          onClick={onMobileDrawerToggle}
+          sx={{ display: { xs: "block", md: "none" } }}
+        >
+          <MenuIcon />
+        </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Caphub
         </Typography>
-        <IconButton
-          edge="end"
-          color="inherit"
-          aria-label="logout"
-          onClick={() => {
-            setLogoutState("DOING");
-            handleLogoutClick();
-          }}
-        >
-          {LOGOUT[logoutState]}
-        </IconButton>
+        {user && (
+          <>
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              sx={{ display: { xs: "none", md: "block" } }}
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={() => navigate("/my-account")}>
+                My Account
+              </MenuItem>
+              <MenuItem onClick={() => navigate("/logout")}>Logout</MenuItem>
+            </Menu>
+          </>
+        )}
       </Toolbar>
     </AppBar>
   );

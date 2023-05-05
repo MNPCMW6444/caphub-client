@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Drawer from "@mui/material/Drawer";
@@ -7,7 +7,6 @@ import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
 
 interface CaphubSideBarProps {
   mobileDrawerOpen: boolean;
@@ -21,6 +20,7 @@ const CaphubSideBar: FC<CaphubSideBarProps> = ({
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const location = useLocation();
 
   const menuItems = [
     { label: "Home", route: "/" },
@@ -39,22 +39,26 @@ const CaphubSideBar: FC<CaphubSideBarProps> = ({
     <List>
       {menuItems.map((item, index) => (
         <ListItem
-          button
           key={index}
           onClick={() => handleMenuItemClick(item.route)}
+          sx={{
+            bgcolor:
+              location.pathname === item.route ? "action.selected" : "inherit",
+          }}
         >
           <ListItemText primary={item.label} />
         </ListItem>
       ))}
-      <Divider />
-      <ListItem button onClick={() => navigate("/logout")}>
-        <ListItemText primary="Logout" />
-      </ListItem>
     </List>
   );
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      sx={{
+        display: "flex",
+        mt: isMobile ? 0 : (theme) => theme.spacing(8),
+      }}
+    >
       {isMobile ? (
         <Drawer
           anchor="left"
@@ -70,7 +74,10 @@ const CaphubSideBar: FC<CaphubSideBarProps> = ({
           sx={{
             width: "240px",
             flexShrink: 0,
-            [`& .MuiDrawer-paper`]: { width: "240px", boxSizing: "border-box" },
+            [`& .MuiDrawer-paper`]: {
+              width: "240px",
+              boxSizing: "border-box",
+            },
           }}
         >
           {renderMenuItems()}
