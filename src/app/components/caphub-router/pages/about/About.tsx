@@ -1,6 +1,6 @@
 import { Box, Typography, Link } from "@mui/material";
 import { styled } from "@mui/system";
-import version from "../../../util/version";
+import version from "../../../../util/version";
 
 const StyledBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),

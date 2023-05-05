@@ -2,10 +2,10 @@ import { FC, useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { MainServerContext } from "@caphub-group/mainserver-provider";
-import UserContext from "../../../context/UserContext";
 import { toast } from "react-toastify";
-import { StyledLinearProgressHOC } from "../../auth/CaphubAuth";
 import zxcvbn from "zxcvbn";
+import UserContext from "../../../../context/UserContext";
+import { StyledLinearProgressHOC } from "../../../auth/CaphubAuth";
 
 const StyledContainer = styled(Container)`
   display: flex;
