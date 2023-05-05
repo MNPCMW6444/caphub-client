@@ -1,6 +1,13 @@
 import { FC, useState, useEffect, useContext } from "react";
 import styled from "styled-components";
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  TextField,
+  Typography,
+  Grid,
+} from "@mui/material";
 import { MainServerContext } from "@caphub-group/mainserver-provider";
 import { toast } from "react-toastify";
 import zxcvbn from "zxcvbn";
@@ -87,98 +94,100 @@ const MyAccount: FC = () => {
       <Typography variant="h4" gutterBottom>
         My Account
       </Typography>
-      <Box my={2}>
-        <StyledTextField
-          InputLabelProps={{
-            shrink: user?.name ? true : undefined,
-          }}
-          label="Name"
-          value={name || ""}
-          onChange={(e) => setName(e.target.value)}
-          InputProps={{
-            readOnly: !isEditingName,
-            endAdornment: (
+      <Grid container spacing={4}>
+        <Grid item container spacing={2}>
+          <Grid item xs={9}>
+            <StyledTextField
+              InputLabelProps={{
+                shrink: user?.name ? true : undefined,
+              }}
+              label="Name"
+              value={name || ""}
+              onChange={(e) => setName(e.target.value)}
+              InputProps={{
+                readOnly: !isEditingName,
+              }}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={3}>
+            {!isEditingName && (
+              <Button variant="outlined" onClick={() => setIsEditingName(true)}>
+                Edit
+              </Button>
+            )}
+            {isEditingName && (
               <>
-                {!isEditingName && (
-                  <Button
-                    variant="outlined"
-                    onClick={() => setIsEditingName(true)}
-                  >
-                    Edit
-                  </Button>
-                )}
-                {isEditingName && (
-                  <>
-                    <Button variant="contained" onClick={handleUpdateName}>
-                      Save
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      onClick={() => setIsEditingName(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </>
-                )}
+                <Button variant="contained" onClick={handleUpdateName}>
+                  Save
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => setIsEditingName(false)}
+                >
+                  Cancel
+                </Button>
               </>
-            ),
-          }}
-          fullWidth
-        />
-      </Box>
-      <Box my={2}>
-        <StyledTextField
-          InputLabelProps={{
-            shrink: user?.email ? true : undefined,
-          }}
-          label="Email"
-          value={user?.email || ""}
-          InputProps={{
-            readOnly: true,
-          }}
-          fullWidth
-        />
-      </Box>
-      <Box my={2}>
-        <StyledTextField
-          InputLabelProps={{
-            shrink: true,
-          }}
-          label="Password"
-          value={password || ""}
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          InputProps={{
-            readOnly: !isEditingPassword,
-            endAdornment: (
+            )}
+          </Grid>
+        </Grid>
+        <Grid item container spacing={2}>
+          <Grid item xs={9}>
+            {" "}
+            <StyledTextField
+              InputLabelProps={{
+                shrink: user?.email ? true : undefined,
+              }}
+              label="Email"
+              value={user?.email || ""}
+              InputProps={{
+                readOnly: true,
+              }}
+              fullWidth
+            />
+          </Grid>
+        </Grid>
+        <Grid item container spacing={2}>
+          <Grid item xs={9}>
+            <StyledTextField
+              InputLabelProps={{
+                shrink: true,
+              }}
+              label="Password"
+              value={password || ""}
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+              InputProps={{
+                readOnly: !isEditingPassword,
+              }}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={3}>
+            {!isEditingPassword && (
+              <Button
+                variant="outlined"
+                onClick={() => setIsEditingPassword(true)}
+              >
+                Edit
+              </Button>
+            )}
+            {isEditingPassword && (
               <>
-                {!isEditingPassword && (
-                  <Button
-                    variant="outlined"
-                    onClick={() => setIsEditingPassword(true)}
-                  >
-                    Edit
-                  </Button>
-                )}
-                {isEditingPassword && (
-                  <>
-                    <Button variant="contained" onClick={handleUpdatePassword}>
-                      Save
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      onClick={() => setIsEditingPassword(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </>
-                )}
+                <Button variant="contained" onClick={handleUpdatePassword}>
+                  Save
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => setIsEditingPassword(false)}
+                >
+                  Cancel
+                </Button>
               </>
-            ),
-          }}
-          fullWidth
-        />
-      </Box>
+            )}
+          </Grid>
+        </Grid>
+      </Grid>
       {isEditingPassword && (
         <>
           <Box my={2}>

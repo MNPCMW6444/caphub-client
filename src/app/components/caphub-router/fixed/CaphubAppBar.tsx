@@ -73,7 +73,6 @@ const CaphubAppBar: React.FC<CaphubAppBarProps> = ({
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleMenu}
-              sx={{ display: { xs: "none", md: "block" } }}
             >
               <AccountCircle />
             </IconButton>
