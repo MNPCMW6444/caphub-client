@@ -88,13 +88,12 @@ const MyAccount: FC = () => {
   useEffect(() => {
     setPasswordStrength(zxcvbn(password).score);
   }, [password]);
-
   return (
     <StyledContainer maxWidth="xs">
       <Typography variant="h4" gutterBottom>
-        My Account
+        Account Management
       </Typography>
-      <Grid container spacing={4}>
+      <Grid container direction="column" spacing={2}>
         <Grid item container spacing={2}>
           <Grid item xs={9}>
             <StyledTextField
@@ -133,7 +132,6 @@ const MyAccount: FC = () => {
         </Grid>
         <Grid item container spacing={2}>
           <Grid item xs={9}>
-            {" "}
             <StyledTextField
               InputLabelProps={{
                 shrink: user?.email ? true : undefined,
@@ -146,6 +144,7 @@ const MyAccount: FC = () => {
               fullWidth
             />
           </Grid>
+          <Grid item xs={3}></Grid>
         </Grid>
         <Grid item container spacing={2}>
           <Grid item xs={9}>
@@ -187,28 +186,31 @@ const MyAccount: FC = () => {
             )}
           </Grid>
         </Grid>
+
+        {isEditingPassword && (
+          <Grid item container spacing={2}>
+            <Grid item xs={3}>
+              <StyledTextField
+                label="Confirm Password"
+                type="password"
+                value={repeatPassword}
+                onChange={(e) => setRepeatPassword(e.target.value)}
+                error={!isPasswordValid}
+                helperText={!isPasswordValid && "Passwords do not match"}
+                fullWidth
+              />
+            </Grid>
+            <Grid item container spacing={2}>
+              <Grid item xs={3}>
+                <StyledLinearProgress
+                  value={passwordStrength * 25}
+                  variant="determinate"
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        )}
       </Grid>
-      {isEditingPassword && (
-        <>
-          <Box my={2}>
-            <StyledTextField
-              label="Confirm Password"
-              type="password"
-              value={repeatPassword}
-              onChange={(e) => setRepeatPassword(e.target.value)}
-              error={!isPasswordValid}
-              helperText={!isPasswordValid && "Passwords do not match"}
-              fullWidth
-            />
-          </Box>
-          <Box my={1}>
-            <StyledLinearProgress
-              value={passwordStrength * 25}
-              variant="determinate"
-            />
-          </Box>
-        </>
-      )}
     </StyledContainer>
   );
 };
