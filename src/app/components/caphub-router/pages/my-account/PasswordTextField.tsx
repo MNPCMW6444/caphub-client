@@ -1,7 +1,6 @@
 import { FC, useState, Dispatch, SetStateAction, useEffect } from "react";
-import { Box, TextField, Button, Stack, Grid } from "@mui/material";
+import { TextField, Button, Stack, Grid } from "@mui/material";
 import { StandardTextFieldProps } from "@mui/material/TextField";
-import { StyledDivider, StyledTextField } from "./MyAccount";
 import { StyledLinearProgressHOC } from "../../../auth/CaphubAuth";
 import zxcvbn from "zxcvbn";
 
@@ -54,8 +53,8 @@ const PasswordTextField: FC<PasswordTextFieldProps> = ({
   }, [value, value2]);
 
   return (
-    <>
-      <Box display="flex" alignItems="center">
+    <Grid container direction="column" spacing={2}>
+      <Grid item>
         <TextField
           {...props}
           value={value}
@@ -67,9 +66,32 @@ const PasswordTextField: FC<PasswordTextFieldProps> = ({
             readOnly: !isEditing,
           }}
         />
+      </Grid>
+      {isEditing && (
+        <Grid item>
+          <StyledLinearProgress
+            value={passwordStrength * 25}
+            variant="determinate"
+          />
+        </Grid>
+      )}
+      {isEditing && (
+        <Grid item>
+          <TextField
+            label="Confirm Password"
+            type="password"
+            value={value2}
+            onChange={(e: any) => setValue2(e.target.value)}
+            error={!isPasswordValid}
+            helperText={!isPasswordValid && "Passwords do not match"}
+            fullWidth
+          />
+        </Grid>
+      )}
+      <Grid item alignSelf="center">
         {!isEditing && (
           <Button variant="outlined" onClick={() => setIsEditing(true)}>
-            Edit
+            Edit{` ${props.label}`}
           </Button>
         )}
         {isEditing && (
@@ -82,33 +104,8 @@ const PasswordTextField: FC<PasswordTextFieldProps> = ({
             </Button>
           </Stack>
         )}
-      </Box>
-
-      <Box display="flex" alignItems="center">
-        <StyledDivider />
-        <Grid item container spacing={2}>
-          <Grid item xs={3}>
-            <StyledTextField
-              label="Confirm Password"
-              type="password"
-              value={value2}
-              onChange={(e: any) => setValue2(e.target.value)}
-              error={!isPasswordValid}
-              helperText={!isPasswordValid && "Passwords do not match"}
-              fullWidth
-            />
-          </Grid>
-          <Grid item container spacing={2}>
-            <Grid item xs={3}>
-              <StyledLinearProgress
-                value={passwordStrength * 25}
-                variant="determinate"
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-      </Box>
-    </>
+      </Grid>
+    </Grid>
   );
 };
 

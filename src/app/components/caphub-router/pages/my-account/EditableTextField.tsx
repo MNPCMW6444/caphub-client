@@ -1,5 +1,5 @@
 import { FC, useState, Dispatch, SetStateAction, useEffect } from "react";
-import { Box, TextField, Button, Stack } from "@mui/material";
+import { TextField, Button, Stack, Grid } from "@mui/material";
 import { StandardTextFieldProps } from "@mui/material/TextField";
 
 interface EditableTextFieldProps extends StandardTextFieldProps {
@@ -31,34 +31,38 @@ const EditableTextField: FC<EditableTextFieldProps> = ({
   }, [value, setter]);
 
   return (
-    <Box display="flex" alignItems="center">
-      <TextField
-        {...props}
-        value={value}
-        onChange={(e) => {
-          setValue(e.target.value);
-        }}
-        InputProps={{
-          ...props.InputProps,
-          readOnly: !isEditing,
-        }}
-      />
-      {!isEditing && (
-        <Button variant="outlined" onClick={() => setIsEditing(true)}>
-          Edit
-        </Button>
-      )}
-      {isEditing && (
-        <Stack direction="row" spacing={1}>
-          <Button variant="contained" onClick={handleSave}>
-            Save
+    <Grid container direction="column" spacing={2}>
+      <Grid item>
+        <TextField
+          {...props}
+          value={value}
+          onChange={(e) => {
+            setValue(e.target.value);
+          }}
+          InputProps={{
+            ...props.InputProps,
+            readOnly: !isEditing,
+          }}
+        />
+      </Grid>
+      <Grid item alignSelf="center">
+        {!isEditing && (
+          <Button variant="outlined" onClick={() => setIsEditing(true)}>
+            Edit{` ${props.label}`}
           </Button>
-          <Button variant="outlined" onClick={handleCancel}>
-            Cancel
-          </Button>
-        </Stack>
-      )}
-    </Box>
+        )}
+        {isEditing && (
+          <Stack direction="row" spacing={1}>
+            <Button variant="contained" onClick={handleSave}>
+              Save
+            </Button>
+            <Button variant="outlined" onClick={handleCancel}>
+              Cancel
+            </Button>
+          </Stack>
+        )}
+      </Grid>
+    </Grid>
   );
 };
 
