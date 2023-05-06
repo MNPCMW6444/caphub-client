@@ -10,7 +10,7 @@ COPY .npmrc ./
 ENV NPM_TOKEN=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
 
 # Install dependencies
-RUN npm i
+RUN npm ci
 
 # Copy the rest of the application code to the working directory
 COPY . .
