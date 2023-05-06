@@ -2,7 +2,6 @@ import { FC, useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import {
   Box,
-  Button,
   Container,
   TextField,
   Typography,
@@ -18,6 +17,7 @@ import { StyledLinearProgressHOC } from "../../../auth/CaphubAuth";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
+import EditableTextField from "./EditableTextField";
 
 const StyledContainer = styled(Container)`
   display: flex;
@@ -79,7 +79,9 @@ const MyAccount: FC = () => {
         { withCredentials: true }
       );
       setIsEditingName(false);
+
       toast("Name updated successfully!");
+      getUser();
     } catch (err) {
       console.error(err);
     }
@@ -94,6 +96,7 @@ const MyAccount: FC = () => {
       );
       setIsEditingPassword(false);
       toast("Password updated successfully!");
+      getUser();
     } catch (err) {
       console.error(err);
     }
@@ -121,48 +124,25 @@ const MyAccount: FC = () => {
       <StyledPaper elevation={3}>
         <Grid container direction="column" spacing={2}>
           <Grid item container spacing={2}>
-            <Grid item xs={9}>
-              <StyledTextField
+            <Grid item xs={12}>
+              <EditableTextField
                 InputLabelProps={{
                   shrink: user?.name ? true : undefined,
                 }}
                 label="Name"
                 value={name || ""}
-                onChange={(e) => setName(e.target.value)}
+                onEditSave={handleUpdateName}
+                setter={setName}
                 InputProps={{
-                  readOnly: !isEditingName,
                   startAdornment: <AccountCircleIcon />,
                 }}
                 fullWidth
               />
             </Grid>
-            <Grid item xs={3}>
-              {!isEditingName && (
-                <Button
-                  variant="outlined"
-                  onClick={() => setIsEditingName(true)}
-                >
-                  Edit
-                </Button>
-              )}
-              {isEditingName && (
-                <>
-                  <Button variant="contained" onClick={handleUpdateName}>
-                    Save
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={() => setIsEditingName(false)}
-                  >
-                    Cancel
-                  </Button>
-                </>
-              )}
-            </Grid>
           </Grid>
           <StyledDivider />
           <Grid item container spacing={2}>
-            <Grid item xs={9}>
+            <Grid item xs={12}>
               <StyledTextField
                 InputLabelProps={{
                   shrink: user?.email ? true : undefined,
