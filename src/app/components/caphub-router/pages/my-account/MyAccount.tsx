@@ -1,13 +1,13 @@
 import { FC, useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import {
-  Box,
   Container,
   TextField,
   Typography,
   Grid,
   Paper,
   Divider,
+  Button,
 } from "@mui/material";
 import { MainServerContext } from "@caphub-group/mainserver-provider";
 import { toast } from "react-toastify";
@@ -57,7 +57,8 @@ const MyAccount: FC = () => {
   const [name, setName] = useState(user?.name || "");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-  const [isEditingName, setIsEditingName] = useState(false);
+  const setIsEditingNamex = useState(false);
+  const setIsEditingName = setIsEditingNamex[1];
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
 
