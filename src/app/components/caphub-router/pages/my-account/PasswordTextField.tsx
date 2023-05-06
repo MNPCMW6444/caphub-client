@@ -1,0 +1,115 @@
+import { FC, useState, Dispatch, SetStateAction, useEffect } from "react";
+import { Box, TextField, Button, Stack, Grid } from "@mui/material";
+import { StandardTextFieldProps } from "@mui/material/TextField";
+import { StyledDivider, StyledTextField } from "./MyAccount";
+import { StyledLinearProgressHOC } from "../../../auth/CaphubAuth";
+import zxcvbn from "zxcvbn";
+
+interface PasswordTextFieldProps extends StandardTextFieldProps {
+  onEditSave: () => Promise<void>;
+  value: string;
+  value2: string;
+  setter: Dispatch<SetStateAction<string>>;
+  setter2: Dispatch<SetStateAction<string>>;
+}
+
+const PasswordTextField: FC<PasswordTextFieldProps> = ({
+  onEditSave,
+  setter,
+  setter2,
+  ...props
+}) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [value, setValue] = useState<string>(props.value || "");
+  const [value2, setValue2] = useState<string>(props.value2 || "");
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState<number>(0);
+
+  const StyledLinearProgress = StyledLinearProgressHOC(passwordStrength);
+
+  useEffect(() => {
+    setPasswordStrength(zxcvbn(value).score);
+  }, [value]);
+
+  const handleSave = () => {
+    onEditSave();
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setValue(props.value || "");
+    setIsEditing(false);
+  };
+
+  useEffect(() => {
+    setter(value);
+  }, [value, setter]);
+
+  useEffect(() => {
+    setter2(value2);
+  }, [value2, setter2]);
+
+  useEffect(() => {
+    setIsPasswordValid(!!(value && value2 && value === value2));
+  }, [value, value2]);
+
+  return (
+    <>
+      <Box display="flex" alignItems="center">
+        <TextField
+          {...props}
+          value={value}
+          onChange={(e) => {
+            setValue(e.target.value);
+          }}
+          InputProps={{
+            ...props.InputProps,
+            readOnly: !isEditing,
+          }}
+        />
+        {!isEditing && (
+          <Button variant="outlined" onClick={() => setIsEditing(true)}>
+            Edit
+          </Button>
+        )}
+        {isEditing && (
+          <Stack direction="row" spacing={1}>
+            <Button variant="contained" onClick={handleSave}>
+              Save
+            </Button>
+            <Button variant="outlined" onClick={handleCancel}>
+              Cancel
+            </Button>
+          </Stack>
+        )}
+      </Box>
+
+      <Box display="flex" alignItems="center">
+        <StyledDivider />
+        <Grid item container spacing={2}>
+          <Grid item xs={3}>
+            <StyledTextField
+              label="Confirm Password"
+              type="password"
+              value={value2}
+              onChange={(e: any) => setValue2(e.target.value)}
+              error={!isPasswordValid}
+              helperText={!isPasswordValid && "Passwords do not match"}
+              fullWidth
+            />
+          </Grid>
+          <Grid item container spacing={2}>
+            <Grid item xs={3}>
+              <StyledLinearProgress
+                value={passwordStrength * 25}
+                variant="determinate"
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Box>
+    </>
+  );
+};
+
+export default PasswordTextField;

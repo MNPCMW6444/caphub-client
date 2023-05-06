@@ -7,17 +7,15 @@ import {
   Grid,
   Paper,
   Divider,
-  Button,
 } from "@mui/material";
 import { MainServerContext } from "@caphub-group/mainserver-provider";
 import { toast } from "react-toastify";
-import zxcvbn from "zxcvbn";
 import UserContext from "../../../../context/UserContext";
-import { StyledLinearProgressHOC } from "../../../auth/CaphubAuth";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import EditableTextField from "./EditableTextField";
+import PasswordTextField from "./PasswordTextField";
 
 const StyledContainer = styled(Container)`
   display: flex;
@@ -39,14 +37,14 @@ const StyledPaper = styled(Paper)`
   width: 100%;
 `;
 
-const StyledDivider = styled(Divider)`
+export const StyledDivider = styled(Divider)`
   margin-top: ${(props) =>
     props.theme.spacing instanceof Function ? props.theme.spacing(2) : 2}px;
   margin-bottom: ${(props) =>
     props.theme.spacing instanceof Function ? props.theme.spacing(2) : 2}px;
 `;
 
-const StyledTextField = styled(TextField)`
+export const StyledTextField: any = styled(TextField)`
   width: 100%;
   margin-bottom: ${(props) =>
     props.theme.spacing instanceof Function ? props.theme.spacing(2) : 2}px;
@@ -60,7 +58,6 @@ const MyAccount: FC = () => {
   const setIsEditingNamex = useState(false);
   const setIsEditingName = setIsEditingNamex[1];
   const [isEditingPassword, setIsEditingPassword] = useState(false);
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
 
   const axiosInstance = useContext(MainServerContext);
 
@@ -102,20 +99,6 @@ const MyAccount: FC = () => {
       console.error(err);
     }
   };
-
-  useEffect(() => {
-    setIsPasswordValid(
-      !!(password && repeatPassword && password === repeatPassword)
-    );
-  }, [password, repeatPassword]);
-
-  const [passwordStrength, setPasswordStrength] = useState<number>(0);
-
-  const StyledLinearProgress = StyledLinearProgressHOC(passwordStrength);
-
-  useEffect(() => {
-    setPasswordStrength(zxcvbn(password).score);
-  }, [password]);
 
   return (
     <StyledContainer maxWidth="xs">
@@ -161,71 +144,25 @@ const MyAccount: FC = () => {
           <StyledDivider />
           <Grid item container spacing={2}>
             <Grid item xs={9}>
-              <StyledTextField
+              <PasswordTextField
                 InputLabelProps={{
                   shrink: true,
                 }}
                 label="Password"
                 value={password || ""}
-                onChange={(e) => setPassword(e.target.value)}
+                value2={repeatPassword}
                 type="password"
                 InputProps={{
                   readOnly: !isEditingPassword,
                   startAdornment: <LockIcon />,
                 }}
                 fullWidth
+                onEditSave={handleUpdatePassword}
+                setter={setPassword}
+                setter2={setRepeatPassword}
               />
             </Grid>
-            <Grid item xs={3}>
-              {!isEditingPassword && (
-                <Button
-                  variant="outlined"
-                  onClick={() => setIsEditingPassword(true)}
-                >
-                  Edit
-                </Button>
-              )}
-              {isEditingPassword && (
-                <>
-                  <Button variant="contained" onClick={handleUpdatePassword}>
-                    Save
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={() => setIsEditingPassword(false)}
-                  >
-                    Cancel
-                  </Button>
-                </>
-              )}
-            </Grid>
           </Grid>
-          {isEditingPassword && (
-            <>
-              <StyledDivider />
-              <Grid item container spacing={2}>
-                <Grid item xs={3}>
-                  <StyledTextField
-                    label="Confirm Password"
-                    type="password"
-                    value={repeatPassword}
-                    onChange={(e) => setRepeatPassword(e.target.value)}
-                    error={!isPasswordValid}
-                    helperText={!isPasswordValid && "Passwords do not match"}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item container spacing={2}>
-                  <Grid item xs={3}>
-                    <StyledLinearProgress
-                      value={passwordStrength * 25}
-                      variant="determinate"
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </>
-          )}
         </Grid>
       </StyledPaper>
     </StyledContainer>
