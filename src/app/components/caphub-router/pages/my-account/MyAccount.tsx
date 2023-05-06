@@ -7,12 +7,17 @@ import {
   TextField,
   Typography,
   Grid,
+  Paper,
+  Divider,
 } from "@mui/material";
 import { MainServerContext } from "@caphub-group/mainserver-provider";
 import { toast } from "react-toastify";
 import zxcvbn from "zxcvbn";
 import UserContext from "../../../../context/UserContext";
 import { StyledLinearProgressHOC } from "../../../auth/CaphubAuth";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import EmailIcon from "@mui/icons-material/Email";
+import LockIcon from "@mui/icons-material/Lock";
 
 const StyledContainer = styled(Container)`
   display: flex;
@@ -20,6 +25,25 @@ const StyledContainer = styled(Container)`
   align-items: center;
   padding-top: ${(props) =>
     props.theme.spacing instanceof Function ? props.theme.spacing(32) : 32}px;
+  background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+  min-height: 100vh;
+`;
+
+const StyledTypography = styled(Typography)`
+  color: #ffffff;
+`;
+
+const StyledPaper = styled(Paper)`
+  padding: ${(props) =>
+    props.theme.spacing instanceof Function ? props.theme.spacing(4) : 4}px;
+  width: 100%;
+`;
+
+const StyledDivider = styled(Divider)`
+  margin-top: ${(props) =>
+    props.theme.spacing instanceof Function ? props.theme.spacing(2) : 2}px;
+  margin-bottom: ${(props) =>
+    props.theme.spacing instanceof Function ? props.theme.spacing(2) : 2}px;
 `;
 
 const StyledTextField = styled(TextField)`
@@ -88,129 +112,141 @@ const MyAccount: FC = () => {
   useEffect(() => {
     setPasswordStrength(zxcvbn(password).score);
   }, [password]);
+
   return (
     <StyledContainer maxWidth="xs">
-      <Typography variant="h4" gutterBottom>
+      <StyledTypography variant="h4" gutterBottom>
         Account Management
-      </Typography>
-      <Grid container direction="column" spacing={2}>
-        <Grid item container spacing={2}>
-          <Grid item xs={9}>
-            <StyledTextField
-              InputLabelProps={{
-                shrink: user?.name ? true : undefined,
-              }}
-              label="Name"
-              value={name || ""}
-              onChange={(e) => setName(e.target.value)}
-              InputProps={{
-                readOnly: !isEditingName,
-              }}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={3}>
-            {!isEditingName && (
-              <Button variant="outlined" onClick={() => setIsEditingName(true)}>
-                Edit
-              </Button>
-            )}
-            {isEditingName && (
-              <>
-                <Button variant="contained" onClick={handleUpdateName}>
-                  Save
-                </Button>
-                <Button
-                  variant="outlined"
-                  onClick={() => setIsEditingName(false)}
-                >
-                  Cancel
-                </Button>
-              </>
-            )}
-          </Grid>
-        </Grid>
-        <Grid item container spacing={2}>
-          <Grid item xs={9}>
-            <StyledTextField
-              InputLabelProps={{
-                shrink: user?.email ? true : undefined,
-              }}
-              label="Email"
-              value={user?.email || ""}
-              InputProps={{
-                readOnly: true,
-              }}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={3}></Grid>
-        </Grid>
-        <Grid item container spacing={2}>
-          <Grid item xs={9}>
-            <StyledTextField
-              InputLabelProps={{
-                shrink: true,
-              }}
-              label="Password"
-              value={password || ""}
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              InputProps={{
-                readOnly: !isEditingPassword,
-              }}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={3}>
-            {!isEditingPassword && (
-              <Button
-                variant="outlined"
-                onClick={() => setIsEditingPassword(true)}
-              >
-                Edit
-              </Button>
-            )}
-            {isEditingPassword && (
-              <>
-                <Button variant="contained" onClick={handleUpdatePassword}>
-                  Save
-                </Button>
-                <Button
-                  variant="outlined"
-                  onClick={() => setIsEditingPassword(false)}
-                >
-                  Cancel
-                </Button>
-              </>
-            )}
-          </Grid>
-        </Grid>
-
-        {isEditingPassword && (
+      </StyledTypography>
+      <StyledPaper elevation={3}>
+        <Grid container direction="column" spacing={2}>
           <Grid item container spacing={2}>
-            <Grid item xs={3}>
+            <Grid item xs={9}>
               <StyledTextField
-                label="Confirm Password"
-                type="password"
-                value={repeatPassword}
-                onChange={(e) => setRepeatPassword(e.target.value)}
-                error={!isPasswordValid}
-                helperText={!isPasswordValid && "Passwords do not match"}
+                InputLabelProps={{
+                  shrink: user?.name ? true : undefined,
+                }}
+                label="Name"
+                value={name || ""}
+                onChange={(e) => setName(e.target.value)}
+                InputProps={{
+                  readOnly: !isEditingName,
+                  startAdornment: <AccountCircleIcon />,
+                }}
                 fullWidth
               />
             </Grid>
-            <Grid item container spacing={2}>
-              <Grid item xs={3}>
-                <StyledLinearProgress
-                  value={passwordStrength * 25}
-                  variant="determinate"
-                />
-              </Grid>
+            <Grid item xs={3}>
+              {!isEditingName && (
+                <Button
+                  variant="outlined"
+                  onClick={() => setIsEditingName(true)}
+                >
+                  Edit
+                </Button>
+              )}
+              {isEditingName && (
+                <>
+                  <Button variant="contained" onClick={handleUpdateName}>
+                    Save
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => setIsEditingName(false)}
+                  >
+                    Cancel
+                  </Button>
+                </>
+              )}
             </Grid>
           </Grid>
-        )}
-      </Grid>
+          <StyledDivider />
+          <Grid item container spacing={2}>
+            <Grid item xs={9}>
+              <StyledTextField
+                InputLabelProps={{
+                  shrink: user?.email ? true : undefined,
+                }}
+                label="Email"
+                value={user?.email || ""}
+                InputProps={{
+                  readOnly: true,
+                  startAdornment: <EmailIcon />,
+                }}
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+          <StyledDivider />
+          <Grid item container spacing={2}>
+            <Grid item xs={9}>
+              <StyledTextField
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                label="Password"
+                value={password || ""}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                InputProps={{
+                  readOnly: !isEditingPassword,
+                  startAdornment: <LockIcon />,
+                }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={3}>
+              {!isEditingPassword && (
+                <Button
+                  variant="outlined"
+                  onClick={() => setIsEditingPassword(true)}
+                >
+                  Edit
+                </Button>
+              )}
+              {isEditingPassword && (
+                <>
+                  <Button variant="contained" onClick={handleUpdatePassword}>
+                    Save
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => setIsEditingPassword(false)}
+                  >
+                    Cancel
+                  </Button>
+                </>
+              )}
+            </Grid>
+          </Grid>
+          {isEditingPassword && (
+            <>
+              <StyledDivider />
+              <Grid item container spacing={2}>
+                <Grid item xs={3}>
+                  <StyledTextField
+                    label="Confirm Password"
+                    type="password"
+                    value={repeatPassword}
+                    onChange={(e) => setRepeatPassword(e.target.value)}
+                    error={!isPasswordValid}
+                    helperText={!isPasswordValid && "Passwords do not match"}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item container spacing={2}>
+                  <Grid item xs={3}>
+                    <StyledLinearProgress
+                      value={passwordStrength * 25}
+                      variant="determinate"
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </>
+          )}
+        </Grid>
+      </StyledPaper>
     </StyledContainer>
   );
 };

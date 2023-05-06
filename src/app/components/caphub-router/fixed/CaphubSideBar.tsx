@@ -24,7 +24,6 @@ const CaphubSideBar: FC<CaphubSideBarProps> = ({
 
   const menuItems = [
     { label: "Home", route: "/" },
-    { label: "My Account", route: "/my-account" },
     { label: "About", route: "/about" },
   ];
 
