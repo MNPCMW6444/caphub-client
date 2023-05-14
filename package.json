@@ -1,21 +1,15 @@
 {
   "name": "caphub-client",
-  "version": "0.1.17",
+  "version": "0.1.20",
   "private": true,
   "dependencies": {
     "@caphub-group/caphub-types": "^3.9.94",
     "@caphub-group/mainserver-provider": "^4.6.64",
-    "@emotion/react": "^11.11.0",
-    "@emotion/styled": "^11.11.0",
+    "@caphub-group/theme-provider": "^1.1.21",
     "@mui/icons-material": "^5.11.16",
-    "@mui/material": "^5.13.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
-    "@types/jest": "^29.5.1",
-    "@types/react-dom": "^18.2.4",
-    "@types/styled-components": "^5.1.26",
-    "@types/zxcvbn": "^4.4.1",
     "emailjs-com": "^3.2.0",
     "react-bootstrap": "^2.7.4",
     "react-dom": "^18.2.0",
@@ -61,5 +55,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/styled-components": "^5.1.26",
+    "@types/zxcvbn": "^4.4.1"
   }
 }
