@@ -4,14 +4,14 @@ import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import UserContext from "../../context/UserContext";
-import CaphubAuth from "../auth/CaphubAuth";
+import CaphubAuthRouter from "../auth/CaphubAuthRouter";
 import Home from "./pages/home/Home";
 import MyAccount from "./pages/my-account/MyAccount";
 import About from "./pages/about/About";
 import CaphubAppBar from "./fixed/CaphubAppBar";
 import CaphubSideBar from "./fixed/CaphubSideBar";
 
-const CaphubRouter: FC = () => {
+const CaphubRouter = () => {
   const { user } = useContext(UserContext);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const theme = useTheme();
@@ -51,7 +51,7 @@ const CaphubRouter: FC = () => {
           </Box>
         </>
       ) : (
-        <CaphubAuth />
+        <CaphubAuthRouter />
       )}
     </BrowserRouter>
   );
