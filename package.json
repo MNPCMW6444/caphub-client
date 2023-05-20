@@ -3,7 +3,6 @@
   "version": "0.1.20",
   "private": true,
   "dependencies": {
-    "@caphub-group/caphub-types": "^3.9.94",
     "@caphub-group/mainserver-provider": "^4.6.64",
     "@caphub-group/theme-provider": "^1.1.21",
     "@mui/icons-material": "^5.11.16",
@@ -58,6 +57,7 @@
   },
   "devDependencies": {
     "@types/styled-components": "^5.1.26",
+    "@caphub-group/caphub-types": "^3.9.94",
     "@types/zxcvbn": "^4.4.1"
   }
 }
