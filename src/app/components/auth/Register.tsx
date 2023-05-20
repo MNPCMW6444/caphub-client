@@ -15,7 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LABELS, LablesConstants, StyledLinearProgressHOC } from "./Login";
 
-const CaphubAuth = () => {
+const Register = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [key, setKey] = useState<string>("");
@@ -55,14 +55,12 @@ const CaphubAuth = () => {
       axiosInstance.post(domain + "auth/signupreq", { email });
     } else {
       if (
-        validateEmail(email) &&
         password.length >= 6 &&
         name.length > 0 &&
         password === confirmPassword
       ) {
         axiosInstance
           .post(domain + "auth/signupfin", {
-            email,
             key,
             fullname: name,
             password,
@@ -90,21 +88,21 @@ const CaphubAuth = () => {
       <Dialog open={true} onClose={() => {}}>
         <DialogTitle>Register</DialogTitle>
         <DialogContent>
-          <form onSubmit={handleSubmit}>
-            {key && (
-              <TextField
-                autoFocus
-                margin="dense"
-                label="Name"
-                type="text"
-                fullWidth
-                variant="outlined"
-                value={name}
-                error={name.length === 0}
-                helperText={name.length === 0 ? "Name is required" : ""}
-                onChange={(e) => setName(e.target.value)}
-              />
-            )}
+          {key && (
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Name"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={name}
+              error={name.length === 0}
+              helperText={name.length === 0 ? "Name is required" : ""}
+              onChange={(e) => setName(e.target.value)}
+            />
+          )}
+          {!key && (
             <TextField
               autoFocus
               data-testid="email"
@@ -118,85 +116,75 @@ const CaphubAuth = () => {
               helperText={!validateEmail(email) ? "Invalid email" : ""}
               onChange={(e) => setEmail(e.target.value)}
             />
-            {key && (
+          )}
+          {key && (
+            <TextField
+              margin="dense"
+              data-testid="password"
+              label="Password"
+              type="password"
+              fullWidth
+              variant="outlined"
+              value={password}
+              onChange={handlePasswordChange}
+              error={passwordStrength < 3}
+              helperText={
+                passwordStrength < 3
+                  ? "Password Strength has to be at least Yellow"
+                  : ""
+              }
+            />
+          )}
+          {key && (
+            <Box my={1}>
+              <StyledLinearProgress
+                value={passwordStrength * 25}
+                variant="determinate"
+              />
+            </Box>
+          )}
+          {key && (
+            <>
               <TextField
                 margin="dense"
-                data-testid="password"
-                label="Password"
+                label="Confirm Password"
                 type="password"
                 fullWidth
                 variant="outlined"
-                value={password}
-                onChange={handlePasswordChange}
-                error={passwordStrength < 3}
+                value={confirmPassword}
+                error={password !== confirmPassword}
                 helperText={
-                  passwordStrength < 3
-                    ? "Password Strength has to be at least Yellow"
-                    : ""
+                  password !== confirmPassword ? "Passwords do not match" : ""
                 }
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
-            )}
-            {key && (
-              <Box my={1}>
-                <StyledLinearProgress
-                  value={passwordStrength * 25}
-                  variant="determinate"
-                />
-              </Box>
-            )}
-            {key && (
-              <>
-                <TextField
-                  margin="dense"
-                  label="Confirm Password"
-                  type="password"
-                  fullWidth
-                  variant="outlined"
-                  value={confirmPassword}
-                  error={password !== confirmPassword}
-                  helperText={
-                    password !== confirmPassword ? "Passwords do not match" : ""
-                  }
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-                <TextField
-                  margin="dense"
-                  label="key"
-                  type="password"
-                  fullWidth
-                  variant="outlined"
-                  value={key}
-                  error={!key}
-                  helperText={key ? "" : "Enter the key from you email inbox"}
-                  onChange={(e) => setKey(e.target.value)}
-                />
-              </>
-            )}
-            <Box mt={2}>
-              <Button
-                type="submit"
-                data-testid="login-button"
-                variant="contained"
-                color="primary"
-                fullWidth
-              >
-                {LABELS[buttonLabel].REGISTER}
-              </Button>
-            </Box>
+            </>
+          )}
+          <Box mt={2}>
+            <Button
+              type="submit"
+              data-testid="login-button"
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleSubmit}
+            >
+              {LABELS[buttonLabel].REGISTER}
+            </Button>
+          </Box>
 
-            <Box mt={1}>
-              <Typography align="center">
-                Already have an account?
-                <Button color="primary" onClick={() => navigate("/")}>
-                  Login here
-                </Button>
-              </Typography>
-            </Box>
-          </form>
+          <Box mt={1}>
+            <Typography align="center">
+              Already have an account?
+              <Button color="primary" onClick={() => navigate("/")}>
+                Login here
+              </Button>
+            </Typography>
+          </Box>
         </DialogContent>
       </Dialog>
     </Box>
   );
 };
 
-export default CaphubAuth;
+export default Register;
