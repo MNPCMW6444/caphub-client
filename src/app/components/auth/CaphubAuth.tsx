@@ -1,4 +1,11 @@
-import { ChangeEvent, FC, FormEvent, useContext, useState } from "react";
+import {
+  ChangeEvent,
+  FC,
+  FormEvent,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 import Box from "@mui/material/Box";
 import LinearProgress, {
   linearProgressClasses,
@@ -14,9 +21,9 @@ import styled from "@emotion/styled";
 import domain from "../../util/config/domain";
 import { MainServerContext } from "@caphub-group/mainserver-provider";
 import UserContext from "../../context/UserContext";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useLocation } from "react-router-dom";
 
 interface CaphubAuthProps {}
 
@@ -24,16 +31,22 @@ interface LablesConstants {
   IDLE: {
     LOGIN: string;
     REGISTER: string;
+    RESET: string;
   };
   DOING: {
     LOGIN: string;
     REGISTER: string;
+    RESET: string;
   };
 }
 
 const LABELS: LablesConstants = {
-  IDLE: { LOGIN: "Login", REGISTER: "Register" },
-  DOING: { LOGIN: "Logging in...", REGISTER: "Registering..." },
+  IDLE: { LOGIN: "Login", REGISTER: "Register", RESET: "Reset" },
+  DOING: {
+    LOGIN: "Logging in...",
+    REGISTER: "Registering...",
+    RESET: "Resetting...",
+  },
 };
 
 export const StyledLinearProgressHOC = (passwordStrength: number) =>
@@ -69,8 +82,7 @@ export const StyledLinearProgressHOC = (passwordStrength: number) =>
   });
 
 const CaphubAuth: FC<CaphubAuthProps> = () => {
-  const [isLoginForm, setIsLoginForm] = useState<boolean>(true);
-  const [isRegisterHaveCode, setIsRegisterHaveCode] = useState<boolean>(false);
+  const [formStatus, setFromStatus] = useState<string>("login");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [key, setKey] = useState<string>("");
@@ -83,14 +95,17 @@ const CaphubAuth: FC<CaphubAuthProps> = () => {
 
   const axiosInstance = useContext(MainServerContext);
 
+  const useQuery = () => new URLSearchParams(useLocation().search);
+  let query = useQuery();
+
+  useEffect(() => {
+    setKey(query.get("key") || "");
+  }, [query]);
+
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
     setPasswordStrength(zxcvbn(newPassword).score);
-  };
-
-  const toggleForm = () => {
-    setIsLoginForm(!isLoginForm);
   };
 
   const validateEmail = (email: string) => {
@@ -102,7 +117,7 @@ const CaphubAuth: FC<CaphubAuthProps> = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    if (isLoginForm) {
+    if (formStatus === "login") {
       if (validateEmail(email) && password) {
         axiosInstance
           .post(domain + "auth/signin", { email, password })
@@ -117,34 +132,65 @@ const CaphubAuth: FC<CaphubAuthProps> = () => {
           });
         setButtonLabel("DOING");
       }
-    } else if (!isRegisterHaveCode) {
-      axiosInstance.post(domain + "auth/signupreq", { email });
-      setIsRegisterHaveCode(true);
+    } else if (formStatus === "register") {
+      if (!key) {
+        axiosInstance.post(domain + "auth/signupreq", { email });
+      } else {
+        if (
+          validateEmail(email) &&
+          password.length >= 6 &&
+          name.length > 0 &&
+          password === confirmPassword
+        ) {
+          axiosInstance
+            .post(domain + "auth/signupfin", {
+              email,
+              key,
+              fullname: name,
+              password,
+              passwordagain: confirmPassword,
+            })
+            .then(() => getUser())
+            .catch((error) => {
+              setButtonLabel("IDLE");
+              toast.error(
+                error?.response?.data.clientError ||
+                  error?.message ||
+                  "Unknown error, Make sure you are Online"
+              );
+            });
+          setButtonLabel("DOING");
+        }
+      }
     } else {
-      if (
-        validateEmail(email) &&
-        password.length >= 6 &&
-        name.length > 0 &&
-        password === confirmPassword
-      ) {
-        axiosInstance
-          .post(domain + "auth/signupfin", {
-            email,
-            key,
-            fullname: name,
-            password,
-            passwordagain: confirmPassword,
-          })
-          .then(() => getUser())
-          .catch((error) => {
-            setButtonLabel("IDLE");
-            toast.error(
-              error?.response?.data.clientError ||
-                error?.message ||
-                "Unknown error, Make sure you are Online"
-            );
-          });
-        setButtonLabel("DOING");
+      if (!key) {
+        axiosInstance.post(domain + "auth/passresreq", { email });
+      } else {
+        if (
+          validateEmail(email) &&
+          password.length >= 6 &&
+          name.length > 0 &&
+          password === confirmPassword
+        ) {
+          axiosInstance
+            .post(domain + "auth/passresfin", {
+              email,
+              key,
+              fullname: name,
+              password,
+              passwordagain: confirmPassword,
+            })
+            .then(() => getUser())
+            .catch((error) => {
+              setButtonLabel("IDLE");
+              toast.error(
+                error?.response?.data.clientError ||
+                  error?.message ||
+                  "Unknown error, Make sure you are Online"
+              );
+            });
+          setButtonLabel("DOING");
+        }
       }
     }
   };
@@ -178,12 +224,18 @@ const CaphubAuth: FC<CaphubAuthProps> = () => {
       {/* Dialog component for Login/Register form */}
       <Dialog open={true} onClose={() => {}}>
         {/* Dialog title, changes based on whether it is a login or register form */}
-        <DialogTitle>{isLoginForm ? "Login" : "Register"}</DialogTitle>
+        <DialogTitle>
+          {formStatus === "login"
+            ? "Login"
+            : formStatus === "register"
+            ? "Register"
+            : "Password Reset"}
+        </DialogTitle>
         <DialogContent>
           {/* Form element that submits data on pressing enter or clicking the submit button */}
           <form onSubmit={handleSubmit}>
             {/* Name input field - Only visible in the Register form */}
-            {!isLoginForm && isRegisterHaveCode && (
+            {formStatus === "register" && key && (
               <TextField
                 autoFocus
                 margin="dense"
@@ -212,7 +264,7 @@ const CaphubAuth: FC<CaphubAuthProps> = () => {
               onChange={(e) => setEmail(e.target.value)}
             />
             {/* Password input field */}
-            {(isLoginForm || isRegisterHaveCode) && (
+            {(formStatus === "login" || key) && (
               <TextField
                 margin="dense"
                 data-testid="password"
@@ -222,16 +274,16 @@ const CaphubAuth: FC<CaphubAuthProps> = () => {
                 variant="outlined"
                 value={password}
                 onChange={handlePasswordChange}
-                error={!isLoginForm && passwordStrength < 3}
+                error={formStatus === "register" && passwordStrength < 3}
                 helperText={
-                  !isLoginForm && passwordStrength < 3
+                  formStatus === "register" && passwordStrength < 3
                     ? "Password Strength has to be at least Yellow"
                     : ""
                 }
               />
             )}
             {/* Password strength indicator - Only visible in the Register form */}
-            {!isLoginForm && isRegisterHaveCode && (
+            {formStatus === "register" && key && (
               <Box my={1}>
                 <StyledLinearProgress
                   value={passwordStrength * 25}
@@ -240,7 +292,7 @@ const CaphubAuth: FC<CaphubAuthProps> = () => {
               </Box>
             )}
             {/* Confirm Password input field - Only visible in the Register form */}
-            {!isLoginForm && isRegisterHaveCode && (
+            {formStatus === "register" && key && (
               <>
                 {" "}
                 <TextField
@@ -279,13 +331,15 @@ const CaphubAuth: FC<CaphubAuthProps> = () => {
                 color="primary"
                 fullWidth
               >
-                {isLoginForm
+                {formStatus === "login"
                   ? LABELS[buttonLabel].LOGIN
-                  : LABELS[buttonLabel].REGISTER}
+                  : formStatus === "register"
+                  ? LABELS[buttonLabel].REGISTER
+                  : LABELS[buttonLabel].RESET}
               </Button>
             </Box>
             {/* Add LinkedIn authentication button */}
-            {isLoginForm && (
+            {formStatus === "login" && (
               <Box mt={2}>
                 <Button
                   variant="outlined"
@@ -301,13 +355,31 @@ const CaphubAuth: FC<CaphubAuthProps> = () => {
             {/* Toggle between Login and Register form */}
             <Box mt={1}>
               <Typography align="center">
-                {isLoginForm
+                {formStatus === "login"
                   ? "Don't have an account?"
-                  : "Already have an account?"}{" "}
-                <Button color="primary" onClick={toggleForm}>
-                  {isLoginForm ? "Register" : "Login"}
+                  : formStatus === "register" && "Already have an account?"}
+                <Button
+                  color="primary"
+                  onClick={() =>
+                    setFromStatus(formStatus === "login" ? "register" : "login")
+                  }
+                >
+                  {formStatus === "login"
+                    ? "Register"
+                    : formStatus === "register" && "Login"}
                 </Button>
               </Typography>
+              {formStatus === "login" && (
+                <Typography align="center">
+                  Forgot you password?
+                  <Button
+                    color="primary"
+                    onClick={() => setFromStatus("reset")}
+                  >
+                    Reset here
+                  </Button>
+                </Typography>
+              )}
             </Box>
           </form>
         </DialogContent>
