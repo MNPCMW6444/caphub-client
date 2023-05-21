@@ -71,7 +71,7 @@ export const StyledLinearProgressHOC = (passwordStrength: number) =>
     };
   });
 
-const CaphubAuth = () => {
+const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [buttonLabel, setButtonLabel] = useState<keyof LablesConstants>("IDLE");
@@ -137,71 +137,70 @@ const CaphubAuth = () => {
       <Dialog open={true} onClose={() => {}}>
         <DialogTitle>Login</DialogTitle>
         <DialogContent>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              autoFocus
-              data-testid="email"
-              margin="dense"
-              label="Email Address"
-              type="email"
-              fullWidth
-              variant="outlined"
-              value={email}
-              error={!validateEmail(email)}
-              helperText={!validateEmail(email) ? "Invalid email" : ""}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+          <TextField
+            autoFocus
+            data-testid="email"
+            margin="dense"
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="outlined"
+            value={email}
+            error={!validateEmail(email)}
+            helperText={!validateEmail(email) ? "Invalid email" : ""}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-            <TextField
-              margin="dense"
-              data-testid="password"
-              label="Password"
-              type="password"
+          <TextField
+            margin="dense"
+            data-testid="password"
+            label="Password"
+            type="password"
+            fullWidth
+            variant="outlined"
+            value={password}
+            onChange={handlePasswordChange}
+          />
+          <Box mt={2}>
+            <Button
+              type="submit"
+              data-testid="login-button"
+              variant="contained"
+              color="primary"
               fullWidth
+              onClick={handleSubmit}
+            >
+              {LABELS[buttonLabel].LOGIN}
+            </Button>
+          </Box>
+          <Box mt={2}>
+            <Button
               variant="outlined"
-              value={password}
-              onChange={handlePasswordChange}
-            />
-            <Box mt={2}>
-              <Button
-                type="submit"
-                data-testid="login-button"
-                variant="contained"
-                color="primary"
-                fullWidth
-              >
-                {LABELS[buttonLabel].LOGIN}
+              color="primary"
+              fullWidth
+              onClick={handleLinkedInLogin}
+            >
+              Login with LinkedIn
+            </Button>
+          </Box>
+          <Box mt={1}>
+            <Typography align="center">
+              Don't have an account?
+              <Button color="primary" onClick={() => navigate("/register")}>
+                Register here
               </Button>
-            </Box>
-            <Box mt={2}>
-              <Button
-                variant="outlined"
-                color="primary"
-                fullWidth
-                onClick={handleLinkedInLogin}
-              >
-                Login with LinkedIn
+            </Typography>
+            <Typography align="center">
+              Forgot you password?
+              <Button color="primary" onClick={() => navigate("/reset")}>
+                Reset here
               </Button>
-            </Box>
-            <Box mt={1}>
-              <Typography align="center">
-                Don't have an account?
-                <Button color="primary" onClick={() => navigate("/register")}>
-                  Register here
-                </Button>
-              </Typography>
-              <Typography align="center">
-                Forgot you password?
-                <Button color="primary" onClick={() => navigate("/reset")}>
-                  Reset here
-                </Button>
-              </Typography>
-            </Box>
-          </form>
+            </Typography>
+          </Box>
         </DialogContent>
       </Dialog>
     </Box>
   );
 };
 
-export default CaphubAuth;
+export default Login;

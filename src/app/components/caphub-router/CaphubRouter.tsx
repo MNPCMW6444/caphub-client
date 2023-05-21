@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";

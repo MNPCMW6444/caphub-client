@@ -14,6 +14,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../../context/UserContext";
+import { MainServerContext } from "@caphub-group/mainserver-provider";
 
 interface CaphubAppBarProps {
   onMobileDrawerToggle: () => void;
@@ -36,6 +37,9 @@ const CaphubAppBar: React.FC<CaphubAppBarProps> = ({
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const axiosInstance = useContext(MainServerContext);
+  const { getUser } = useContext(UserContext);
 
   return (
     <AppBar position="fixed">
@@ -94,7 +98,16 @@ const CaphubAppBar: React.FC<CaphubAppBarProps> = ({
               <MenuItem onClick={() => navigate("/my-account")}>
                 My Account
               </MenuItem>
-              <MenuItem onClick={() => navigate("/logout")}>Logout</MenuItem>
+              <MenuItem
+                onClick={() =>
+                  axiosInstance
+                    .get("auth/signout")
+                    .then(() => getUser())
+                    .catch(() => getUser())
+                }
+              >
+                Logout
+              </MenuItem>
             </Menu>
           </>
         )}
