@@ -7,20 +7,20 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import zxcvbn from "zxcvbn";
-import domain from "../../util/config/domain";
+import domain from "../../../util/config/domain";
 import { MainServerContext } from "@caphub-group/mainserver-provider";
-import UserContext from "../../context/UserContext";
+import UserContext from "../../../context/UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import { LABELS, LablesConstants, StyledLinearProgressHOC } from "./Login";
+import { LABELS, LablesConstants } from "./Login";
+import { StyledLinearProgressHOC } from "./Register";
 
-const Register = () => {
+const Reset = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [key, setKey] = useState<string>("");
   const [check, setCheck] = useState<boolean>(false);
-  const [name, setName] = useState<string>("");
   const [buttonLabel, setButtonLabel] = useState<keyof LablesConstants>("IDLE");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const { getUser } = useContext(UserContext);
@@ -53,18 +53,18 @@ const Register = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!key) {
-      axiosInstance.post(domain + "auth/signupreq", { email });
+      axiosInstance.post(domain + "auth/passresreq", { email });
       setCheck(true);
     } else {
       if (
+        validateEmail(email) &&
         password.length >= 6 &&
-        name.length > 0 &&
         password === confirmPassword
       ) {
         axiosInstance
-          .post(domain + "auth/signupfin", {
+          .post(domain + "auth/passresfin", {
+            email,
             key,
-            fullname: name,
             password,
             passwordagain: confirmPassword,
           })
@@ -88,23 +88,9 @@ const Register = () => {
     <Box width="100%" height="100%" bgcolor="black">
       <ToastContainer />
       <Dialog open={true} onClose={() => {}}>
-        <DialogTitle>Register</DialogTitle>
+        <DialogTitle>Password Reset</DialogTitle>
         <DialogContent>
-          {!check && key && (
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Name"
-              type="text"
-              fullWidth
-              variant="outlined"
-              value={name}
-              error={name.length === 0}
-              helperText={name.length === 0 ? "Name is required" : ""}
-              onChange={(e) => setName(e.target.value)}
-            />
-          )}
-          {!check && !key && (
+          {!check && (
             <TextField
               autoFocus
               data-testid="email"
@@ -160,6 +146,17 @@ const Register = () => {
                 }
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
+              <TextField
+                margin="dense"
+                label="key"
+                type="password"
+                fullWidth
+                variant="outlined"
+                value={key}
+                error={!key}
+                helperText={key ? "" : "Enter the key from you email inbox"}
+                onChange={(e) => setKey(e.target.value)}
+              />
             </>
           )}
           {!check ? (
@@ -173,15 +170,13 @@ const Register = () => {
                   fullWidth
                   onClick={handleSubmit}
                 >
-                  {LABELS[buttonLabel].REGISTER}
+                  {LABELS[buttonLabel].RESET}
                 </Button>
               </Box>
-
               <Box mt={1}>
                 <Typography align="center">
-                  Already have an account?
                   <Button color="primary" onClick={() => navigate("/")}>
-                    Login here
+                    Go Back to Login Page
                   </Button>
                 </Typography>
               </Box>
@@ -197,4 +192,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Reset;

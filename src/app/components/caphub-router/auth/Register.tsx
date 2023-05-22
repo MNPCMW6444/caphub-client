@@ -7,19 +7,56 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import zxcvbn from "zxcvbn";
-import domain from "../../util/config/domain";
+import domain from "../../../util/config/domain";
 import { MainServerContext } from "@caphub-group/mainserver-provider";
-import UserContext from "../../context/UserContext";
+import UserContext from "../../../context/UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import { LABELS, LablesConstants, StyledLinearProgressHOC } from "./Login";
+import { LABELS, LablesConstants } from "./Login";
+import LinearProgress, {
+  linearProgressClasses,
+} from "@mui/material/LinearProgress";
+import styled from "@emotion/styled";
 
-const Reset = () => {
+export const StyledLinearProgressHOC = (passwordStrength: number) =>
+  styled(LinearProgress)(() => {
+    let x = "";
+    switch (passwordStrength) {
+      case 0:
+        break;
+      case 1:
+        x = "red";
+        break;
+      case 2:
+        x = "orange";
+        break;
+      case 3:
+        x = "yellow";
+        break;
+      case 4:
+        x = "green";
+        break;
+      default:
+        x = "gray";
+        break;
+    }
+    return {
+      height: 10,
+      borderRadius: 5,
+      [`& .${linearProgressClasses.bar}`]: {
+        borderRadius: 5,
+        backgroundColor: x,
+      },
+    };
+  });
+
+const Register = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [key, setKey] = useState<string>("");
   const [check, setCheck] = useState<boolean>(false);
+  const [name, setName] = useState<string>("");
   const [buttonLabel, setButtonLabel] = useState<keyof LablesConstants>("IDLE");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const { getUser } = useContext(UserContext);
@@ -52,18 +89,18 @@ const Reset = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!key) {
-      axiosInstance.post(domain + "auth/passresreq", { email });
+      axiosInstance.post(domain + "auth/signupreq", { email });
       setCheck(true);
     } else {
       if (
-        validateEmail(email) &&
         password.length >= 6 &&
+        name.length > 0 &&
         password === confirmPassword
       ) {
         axiosInstance
-          .post(domain + "auth/passresfin", {
-            email,
+          .post(domain + "auth/signupfin", {
             key,
+            fullname: name,
             password,
             passwordagain: confirmPassword,
           })
@@ -87,9 +124,23 @@ const Reset = () => {
     <Box width="100%" height="100%" bgcolor="black">
       <ToastContainer />
       <Dialog open={true} onClose={() => {}}>
-        <DialogTitle>Password Reset</DialogTitle>
+        <DialogTitle>Register</DialogTitle>
         <DialogContent>
-          {!check && (
+          {!check && key && (
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Name"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={name}
+              error={name.length === 0}
+              helperText={name.length === 0 ? "Name is required" : ""}
+              onChange={(e) => setName(e.target.value)}
+            />
+          )}
+          {!check && !key && (
             <TextField
               autoFocus
               data-testid="email"
@@ -145,17 +196,6 @@ const Reset = () => {
                 }
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
-              <TextField
-                margin="dense"
-                label="key"
-                type="password"
-                fullWidth
-                variant="outlined"
-                value={key}
-                error={!key}
-                helperText={key ? "" : "Enter the key from you email inbox"}
-                onChange={(e) => setKey(e.target.value)}
-              />
             </>
           )}
           {!check ? (
@@ -169,13 +209,15 @@ const Reset = () => {
                   fullWidth
                   onClick={handleSubmit}
                 >
-                  {LABELS[buttonLabel].RESET}
+                  {LABELS[buttonLabel].REGISTER}
                 </Button>
               </Box>
+
               <Box mt={1}>
                 <Typography align="center">
+                  Already have an account?
                   <Button color="primary" onClick={() => navigate("/")}>
-                    Go Back to Login Page
+                    Login here
                   </Button>
                 </Typography>
               </Box>
@@ -191,4 +233,4 @@ const Reset = () => {
   );
 };
 
-export default Reset;
+export default Register;

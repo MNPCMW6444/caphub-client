@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import UserContext from "../../context/UserContext";
-import CaphubAuthRouter from "../auth/CaphubAuthRouter";
+import CaphubAuthRouter from "./auth/CaphubAuthRouter";
 import Home from "./pages/home/Home";
 import MyAccount from "./pages/my-account/MyAccount";
 import About from "./pages/about/About";

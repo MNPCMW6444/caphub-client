@@ -2,7 +2,7 @@ import { FC, useState, Dispatch, SetStateAction, useEffect } from "react";
 import { TextField, Button, Stack, Grid } from "@mui/material";
 import { StandardTextFieldProps } from "@mui/material/TextField";
 import zxcvbn from "zxcvbn";
-import { StyledLinearProgressHOC } from "../../../auth/Login";
+import { StyledLinearProgressHOC } from "../../auth/Register";
 
 interface PasswordTextFieldProps extends StandardTextFieldProps {
   onEditSave: () => Promise<void>;

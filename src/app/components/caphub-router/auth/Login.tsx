@@ -1,18 +1,14 @@
 import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import Box from "@mui/material/Box";
-import LinearProgress, {
-  linearProgressClasses,
-} from "@mui/material/LinearProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import styled from "@emotion/styled";
-import domain from "../../util/config/domain";
+import domain from "../../../util/config/domain";
 import { MainServerContext } from "@caphub-group/mainserver-provider";
-import UserContext from "../../context/UserContext";
+import UserContext from "../../../context/UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
@@ -38,38 +34,6 @@ export const LABELS: LablesConstants = {
     RESET: "Resetting...",
   },
 };
-
-export const StyledLinearProgressHOC = (passwordStrength: number) =>
-  styled(LinearProgress)(() => {
-    let x = "";
-    switch (passwordStrength) {
-      case 0:
-        break;
-      case 1:
-        x = "red";
-        break;
-      case 2:
-        x = "orange";
-        break;
-      case 3:
-        x = "yellow";
-        break;
-      case 4:
-        x = "green";
-        break;
-      default:
-        x = "gray";
-        break;
-    }
-    return {
-      height: 10,
-      borderRadius: 5,
-      [`& .${linearProgressClasses.bar}`]: {
-        borderRadius: 5,
-        backgroundColor: x,
-      },
-    };
-  });
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");

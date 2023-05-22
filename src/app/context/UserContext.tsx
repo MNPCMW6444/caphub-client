@@ -9,6 +9,7 @@ import {
 import domain from "../util/config/domain";
 import { CaphubUser } from "@caphub-group/caphub-types";
 import { MainServerContext } from "@caphub-group/mainserver-provider";
+import { Typography } from "@mui/material";
 
 const UserContext = createContext<{
   user?: CaphubUser;
@@ -18,14 +19,21 @@ const UserContext = createContext<{
 function UserContextProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState(undefined);
   const axiosInstance = useContext(MainServerContext);
+  const loadingMessage = <Typography>Loading lilush...</Typography>;
+  const [loading, setloading] = useState(true);
 
   const getUser = useCallback(async () => {
-    try {
-      const userRes = await axiosInstance.get(domain + "auth/signedin");
-      setUser(userRes.data);
-    } catch (e) {
-      setUser(undefined);
-    }
+    axiosInstance
+      .get(domain + "auth/signedin")
+      .then((userRes) => {
+        setloading(false);
+        setUser(userRes.data);
+      })
+      .catch((e) => {
+        setloading(false);
+
+        setUser(undefined);
+      });
   }, [axiosInstance]);
 
   useEffect(() => {
@@ -34,7 +42,7 @@ function UserContextProvider({ children }: { children: ReactNode }) {
 
   return (
     <UserContext.Provider value={{ user, getUser }}>
-      {children}
+      {loading ? loadingMessage : children}
     </UserContext.Provider>
   );
 }
