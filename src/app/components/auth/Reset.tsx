@@ -19,6 +19,7 @@ const Reset = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [key, setKey] = useState<string>("");
+  const [check, setCheck] = useState<boolean>(false);
   const [buttonLabel, setButtonLabel] = useState<keyof LablesConstants>("IDLE");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const { getUser } = useContext(UserContext);
@@ -52,6 +53,7 @@ const Reset = () => {
     e.preventDefault();
     if (!key) {
       axiosInstance.post(domain + "auth/passresreq", { email });
+      setCheck(true);
     } else {
       if (
         validateEmail(email) &&
@@ -87,20 +89,22 @@ const Reset = () => {
       <Dialog open={true} onClose={() => {}}>
         <DialogTitle>Password Reset</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            data-testid="email"
-            margin="dense"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="outlined"
-            value={email}
-            error={!validateEmail(email)}
-            helperText={!validateEmail(email) ? "Invalid email" : ""}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {key && (
+          {!check && (
+            <TextField
+              autoFocus
+              data-testid="email"
+              margin="dense"
+              label="Email Address"
+              type="email"
+              fullWidth
+              variant="outlined"
+              value={email}
+              error={!validateEmail(email)}
+              helperText={!validateEmail(email) ? "Invalid email" : ""}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          )}
+          {!check && key && (
             <TextField
               margin="dense"
               data-testid="password"
@@ -118,7 +122,7 @@ const Reset = () => {
               }
             />
           )}
-          {key && (
+          {!check && key && (
             <Box my={1}>
               <StyledLinearProgress
                 value={passwordStrength * 25}
@@ -126,7 +130,7 @@ const Reset = () => {
               />
             </Box>
           )}
-          {key && (
+          {!check && key && (
             <>
               <TextField
                 margin="dense"
@@ -154,26 +158,33 @@ const Reset = () => {
               />
             </>
           )}
-
-          <Box mt={2}>
-            <Button
-              type="submit"
-              data-testid="login-button"
-              variant="contained"
-              color="primary"
-              fullWidth
-              onClick={handleSubmit}
-            >
-              {LABELS[buttonLabel].RESET}
-            </Button>
-          </Box>
-          <Box mt={1}>
+          {!check ? (
+            <>
+              <Box mt={2}>
+                <Button
+                  type="submit"
+                  data-testid="login-button"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  onClick={handleSubmit}
+                >
+                  {LABELS[buttonLabel].RESET}
+                </Button>
+              </Box>
+              <Box mt={1}>
+                <Typography align="center">
+                  <Button color="primary" onClick={() => navigate("/")}>
+                    Go Back to Login Page
+                  </Button>
+                </Typography>
+              </Box>
+            </>
+          ) : (
             <Typography align="center">
-              <Button color="primary" onClick={() => navigate("/")}>
-                Go Back to Login Page
-              </Button>
+              Check you email inbox for a verification email with your url
             </Typography>
-          </Box>
+          )}
         </DialogContent>
       </Dialog>
     </Box>

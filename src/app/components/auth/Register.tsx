@@ -19,6 +19,7 @@ const Register = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [key, setKey] = useState<string>("");
+  const [check, setCheck] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [buttonLabel, setButtonLabel] = useState<keyof LablesConstants>("IDLE");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -53,6 +54,7 @@ const Register = () => {
     e.preventDefault();
     if (!key) {
       axiosInstance.post(domain + "auth/signupreq", { email });
+      setCheck(true);
     } else {
       if (
         password.length >= 6 &&
@@ -88,7 +90,7 @@ const Register = () => {
       <Dialog open={true} onClose={() => {}}>
         <DialogTitle>Register</DialogTitle>
         <DialogContent>
-          {key && (
+          {!check && key && (
             <TextField
               autoFocus
               margin="dense"
@@ -102,7 +104,7 @@ const Register = () => {
               onChange={(e) => setName(e.target.value)}
             />
           )}
-          {!key && (
+          {!check && !key && (
             <TextField
               autoFocus
               data-testid="email"
@@ -117,7 +119,7 @@ const Register = () => {
               onChange={(e) => setEmail(e.target.value)}
             />
           )}
-          {key && (
+          {!check && key && (
             <TextField
               margin="dense"
               data-testid="password"
@@ -135,7 +137,7 @@ const Register = () => {
               }
             />
           )}
-          {key && (
+          {!check && key && (
             <Box my={1}>
               <StyledLinearProgress
                 value={passwordStrength * 25}
@@ -143,7 +145,7 @@ const Register = () => {
               />
             </Box>
           )}
-          {key && (
+          {!check && key && (
             <>
               <TextField
                 margin="dense"
@@ -160,27 +162,35 @@ const Register = () => {
               />
             </>
           )}
-          <Box mt={2}>
-            <Button
-              type="submit"
-              data-testid="login-button"
-              variant="contained"
-              color="primary"
-              fullWidth
-              onClick={handleSubmit}
-            >
-              {LABELS[buttonLabel].REGISTER}
-            </Button>
-          </Box>
+          {!check ? (
+            <>
+              <Box mt={2}>
+                <Button
+                  type="submit"
+                  data-testid="login-button"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  onClick={handleSubmit}
+                >
+                  {LABELS[buttonLabel].REGISTER}
+                </Button>
+              </Box>
 
-          <Box mt={1}>
+              <Box mt={1}>
+                <Typography align="center">
+                  Already have an account?
+                  <Button color="primary" onClick={() => navigate("/")}>
+                    Login here
+                  </Button>
+                </Typography>
+              </Box>
+            </>
+          ) : (
             <Typography align="center">
-              Already have an account?
-              <Button color="primary" onClick={() => navigate("/")}>
-                Login here
-              </Button>
+              Check you email inbox for a verification email with your url
             </Typography>
-          </Box>
+          )}
         </DialogContent>
       </Dialog>
     </Box>
