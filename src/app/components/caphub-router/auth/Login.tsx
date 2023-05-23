@@ -12,6 +12,7 @@ import UserContext from "../../../context/UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import QRCode from "qrcode.react"; // You'll need to install this package
 
 export interface LablesConstants {
   IDLE: {
@@ -38,16 +39,20 @@ export const LABELS: LablesConstants = {
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [twoFactorCode, setTwoFactorCode] = useState<string>("");
   const [buttonLabel, setButtonLabel] = useState<keyof LablesConstants>("IDLE");
   const { getUser } = useContext(UserContext);
-
   const navigate = useNavigate();
-
   const axiosInstance = useContext(MainServerContext);
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
+  };
+
+  const handleTwoFactorCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newTwoFactorCode = e.target.value;
+    setTwoFactorCode(newTwoFactorCode);
   };
 
   const validateEmail = (email: string) => {
@@ -60,14 +65,14 @@ const Login = () => {
     e.preventDefault();
     if (validateEmail(email) && password) {
       axiosInstance
-        .post(domain + "auth/signin", { email, password })
+        .post(domain + "auth/signin", { email, password, twoFactorCode })
         .then(() => getUser())
         .catch((error) => {
           setButtonLabel("IDLE");
           toast.error(
             error?.response?.data?.clientError ||
-              error?.message ||
-              "Unknown error, Make sure you are Online"
+            error?.message ||
+            "Unknown error, Make sure you are Online"
           );
         });
       setButtonLabel("DOING");
@@ -78,10 +83,9 @@ const Login = () => {
     try {
       const clientId = process.env.REACT_APP_LINKEDIN_CLIENT_ID;
       const redirectUri = encodeURIComponent(
-        `${domain}auth/linkedin/callback${
-          process.env.NODE_ENV === "development"
-            ? process.env.REACT_APP_LINKEDIN_CLIENT_SECRET
-            : ""
+        `${domain}auth/linkedin/callback${process.env.NODE_ENV === "development"
+          ? process.env.REACT_APP_LINKEDIN_CLIENT_SECRET
+          : ""
         }`
       );
       const scope = encodeURIComponent("r_emailaddress r_liteprofile");
@@ -98,7 +102,7 @@ const Login = () => {
   return (
     <Box width="100%" height="100%" bgcolor="black">
       <ToastContainer />
-      <Dialog open={true} onClose={() => {}}>
+      <Dialog open={true} onClose={() => { }}>
         <DialogTitle>Login</DialogTitle>
         <DialogContent>
           <TextField
@@ -125,6 +129,18 @@ const Login = () => {
             value={password}
             onChange={handlePasswordChange}
           />
+
+          <TextField
+            margin="dense"
+            data-testid="2fa-code"
+            label="2FA Code"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={twoFactorCode}
+            onChange={handleTwoFactorCodeChange}
+          />
+
           <Box mt={2}>
             <Button
               type="submit"
@@ -168,3 +184,4 @@ const Login = () => {
 };
 
 export default Login;
+

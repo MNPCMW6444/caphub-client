@@ -1,148 +1,62 @@
-import { FC, useState, useEffect, useContext } from "react";
-import styled from "styled-components";
-import { Container, TextField, Typography, Grid, Paper } from "@mui/material";
-import { MainServerContext } from "@caphub-group/mainserver-provider";
-import { toast } from "react-toastify";
-import UserContext from "../../../../context/UserContext";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import EmailIcon from "@mui/icons-material/Email";
-import LockIcon from "@mui/icons-material/Lock";
-import EditableTextField from "./EditableTextField";
-import PasswordTextField from "./PasswordTextField";
+import { useState, useContext } from "react";
+import axios from "axios";
+import domain from "../../../util/config/domain";
+import UserContext from "../../../context/UserContext";
+import QRCode from "qrcode.react";  // ensure you've installed qrcode.react
+import { Box, Button, TextField } from "@mui/material";
 
-const StyledContainer = styled(Container)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: ${(props) =>
-    props.theme.spacing instanceof Function ? props.theme.spacing(32) : 32}px;
-  min-height: 100vh;
-`;
+const MyAccount = () => {
+  const { user } = useContext(UserContext);
+  const [qrcode, setQrcode] = useState("");
+  const [code, setCode] = useState("");
 
-const StyledTypography = styled(Typography)`
-  color: #ffffff;
-`;
+  if (!user) {
+    return (
+      <Box>
+        <h2>Please login to view this page</h2>
+      </Box>
+    )
+  }
 
-const StyledPaper = styled(Paper)`
-  padding: ${(props) =>
-    props.theme.spacing instanceof Function ? props.theme.spacing(4) : 4}px;
-  width: 100%;
-`;
-
-export const StyledTextField: any = styled(TextField)`
-  width: 100%;
-  margin-bottom: ${(props) =>
-    props.theme.spacing instanceof Function ? props.theme.spacing(2) : 2}px;
-`;
-
-const MyAccount: FC = () => {
-  const { user, getUser } = useContext(UserContext);
-  const [name, setName] = useState(user?.name || "");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
-  const setIsEditingNamex = useState(false);
-  const setIsEditingName = setIsEditingNamex[1];
-  const [isEditingPassword, setIsEditingPassword] = useState(false);
-
-  const axiosInstance = useContext(MainServerContext);
-
-  useEffect(() => {
-    getUser();
-  }, [getUser]);
-
-  useEffect(() => {
-    user && setName(user.name);
-  }, [user]);
-
-  const handleUpdateName = async () => {
-    try {
-      await axiosInstance.post(
-        "auth/updatename",
-        { name },
-        { withCredentials: true }
-      );
-      setIsEditingName(false);
-
-      toast("Name updated successfully!");
-      getUser();
-    } catch (err) {
-      console.error(err);
-    }
+  const handleSetup = () => {
+    axios
+      .post(domain + "2fa-setup")
+      .then((response) => {
+        setQrcode(response.data.qrcode);
+      })
+      .catch((error) => {
+        console.error("Error during 2FA setup: ", error);
+      });
   };
 
-  const handleUpdatePassword = async () => {
-    try {
-      await axiosInstance.post(
-        "auth/updatepassword",
-        { password },
-        { withCredentials: true }
-      );
-      setIsEditingPassword(false);
-      toast("Password updated successfully!");
-      getUser();
-    } catch (err) {
-      console.error(err);
-    }
+  const handleVerify = () => {
+    axios
+      .post(domain + "2fa-verify", { code })
+      .then((response) => {
+        alert(response.data.message);
+      })
+      .catch((error) => {
+        console.error("Error during 2FA verification: ", error);
+      });
   };
 
   return (
-    <StyledContainer maxWidth="xs">
-      <StyledTypography variant="h4" gutterBottom>
-        Account Management
-      </StyledTypography>
-      <StyledPaper elevation={3}>
-        <Grid container direction="column" spacing={2} padding={2}>
-          <Grid item>
-            <EditableTextField
-              InputLabelProps={{
-                shrink: user?.name ? true : undefined,
-              }}
-              label="Name"
-              value={name || ""}
-              onEditSave={handleUpdateName}
-              setter={setName}
-              InputProps={{
-                startAdornment: <AccountCircleIcon />,
-              }}
-              fullWidth
-            />
-          </Grid>
-          <Grid item>
-            <StyledTextField
-              InputLabelProps={{
-                shrink: user?.email ? true : undefined,
-              }}
-              label="Email"
-              value={user?.email || ""}
-              InputProps={{
-                readOnly: true,
-                startAdornment: <EmailIcon />,
-              }}
-              fullWidth
-            />
-          </Grid>
-          <Grid item>
-            <PasswordTextField
-              InputLabelProps={{
-                shrink: true,
-              }}
-              label="Password"
-              value={password || ""}
-              value2={repeatPassword}
-              type="password"
-              InputProps={{
-                readOnly: !isEditingPassword,
-                startAdornment: <LockIcon />,
-              }}
-              fullWidth
-              onEditSave={handleUpdatePassword}
-              setter={setPassword}
-              setter2={setRepeatPassword}
-            />
-          </Grid>
-        </Grid>
-      </StyledPaper>
-    </StyledContainer>
+    <Box>
+      <h2>Welcome, {user.name}</h2>
+      {qrcode ? (
+        <Box>
+          <QRCode value={qrcode} />
+          <TextField
+            type="text"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+          />
+          <Button onClick={handleVerify}>Verify 2FA Setup</Button>
+        </Box>
+      ) : (
+        <Button onClick={handleSetup}>Setup 2FA</Button>
+      )}
+    </Box>
   );
 };
 
